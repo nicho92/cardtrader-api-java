@@ -3,13 +3,15 @@ package org.api.cardtrader.modele;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.google.gson.annotations.SerializedName;
+
 public class App implements Serializable {
 
-	
+	private static final long serialVersionUID = 1L;
 	private Integer id;
 	private String name;
 	private Date lastRequestAt;
-	private String sharedSecret;
+	@SerializedName(value = "shared_secret") private String sharedSecret;
 	
 	
 	public Integer getId() {
@@ -37,6 +39,11 @@ public class App implements Serializable {
 		this.sharedSecret = sharedSecret;
 	}
 	
+	@Override
+	public String toString() {
+		return getName();
+				
+	}
 	
 	
 	

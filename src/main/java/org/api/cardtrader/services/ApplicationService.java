@@ -20,8 +20,11 @@ import com.google.gson.JsonElement;
 
 public class ApplicationService {
 
-	JsonTools json;
-	URLUtilities network; 
+	private static final String EXPANSIONS = "expansions";
+	private static final String CATEGORIES = "categories";
+	private static final String GAMES = "games";
+	private JsonTools json;
+	private URLUtilities network; 
 	private String token;
 	protected Logger logger = Logger.getLogger(this.getClass());
 	
@@ -30,14 +33,11 @@ public class ApplicationService {
 	
 	public static void main(String[] args) throws IOException {
 		var serv = new ApplicationService(Files.readString(new File("D:\\Desktop\\key").toPath()));
-		
-		serv.listCategories().forEach(e->{
-			try {
-				System.out.println(BeanUtils.describe(e));
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
+
+		serv.listExpansions().forEach(ex->{
+			System.out.println(ex);
 		});
+		
 	}
 	
 	
@@ -73,20 +73,20 @@ public class ApplicationService {
 	
 	public List<Game> listGames()
 	{
-			return json.fromJsonList(caches.getCached("games", new Callable<JsonElement>() {
+			return json.fromJsonList(caches.getCached(GAMES, new Callable<JsonElement>() {
 				@Override
 				public JsonElement call() throws Exception {
-					return network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/games").getAsJsonArray();
+					return network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/"+GAMES).getAsJsonArray();
 				}
 			}),Game.class);
 	}
 	
 	public List<Categorie> listCategories()
 	{
-		List<Categorie> ret= json.fromJsonList(caches.getCached("categories", new Callable<JsonElement>() {
+		List<Categorie> ret= json.fromJsonList(caches.getCached(CATEGORIES, new Callable<JsonElement>() {
 			@Override
 			public JsonElement call() throws Exception {
-				return network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/categories").getAsJsonArray();
+				return network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/"+CATEGORIES).getAsJsonArray();
 			}
 		}),Categorie.class);
 		
@@ -99,20 +99,14 @@ public class ApplicationService {
 	
 	public List<Expansion> listExpansions()
 	{
-		
-		List<Expansion> ret = json.fromJsonList(caches.getCached("expansions", new Callable<JsonElement>() {
+		List<Expansion> ret = json.fromJsonList(caches.getCached(EXPANSIONS, new Callable<JsonElement>() {
 			@Override
 			public JsonElement call() throws Exception {
-				return network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/expansions").getAsJsonArray();
+				return network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/"+EXPANSIONS).getAsJsonArray();
 			}
 		}),Expansion.class);
-		
-		
 		ret.forEach(ex->ex.setGame(listGames().stream().filter(g->g.getId()==ex.getGameId()).findFirst().orElse(null)));
-		
 		return ret;
-		
-	
 	}
 	
 }

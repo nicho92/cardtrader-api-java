@@ -12,7 +12,7 @@ public class Expansion implements Serializable {
 	private Game game;
 	private String code;
 	private String name;
-	@SerializedName(value="game_id") int gameId;
+	@SerializedName(value="game_id") private int gameId;
 	
 	public int getGameId() {
 		return gameId;
@@ -45,6 +45,10 @@ public class Expansion implements Serializable {
 		this.name = name;
 	}
 	
+	@Override
+	public String toString() {
+		return getName();
+	}
 	
 
 }

@@ -78,7 +78,7 @@ public class URLUtilities {
 	public JsonElement extractJson(String url) throws IOException {
 		var reader = new JsonReader(new InputStreamReader(doGet(url).getEntity().getContent()));
 		JsonElement e= JsonParser.parseReader(reader);
-		logger.debug("return :" + e);
+		logger.trace("return :" + e);
 		reader.close();
 		return e;
 		

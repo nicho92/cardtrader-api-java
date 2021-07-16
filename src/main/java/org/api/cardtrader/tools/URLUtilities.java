@@ -15,7 +15,7 @@ import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.api.cardtrader.services.ApplicationConfig;
+import org.api.cardtrader.services.CardTraderConstants;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -26,13 +26,22 @@ public class URLUtilities {
 	private HttpClientContext httpContext;
 	private BasicCookieStore cookieStore;
 	protected Logger logger = LogManager.getLogger(this.getClass());
-
+	private String bearer;
+	
+	
 	public URLUtilities() {
 		httpclient = HttpClients.custom().setUserAgent(CardTraderConstants.USER_AGENT_VALUE).setRedirectStrategy(new LaxRedirectStrategy()).build();
 		httpContext = new HttpClientContext();
 		cookieStore = new BasicCookieStore();
 		httpContext.setCookieStore(cookieStore);
+	
 	}
+		
+	public void initToken(String b)
+	{
+		this.bearer="Bearer "+b;
+	}
+	
 	
 	public String extractAndClose(HttpResponse response) throws IOException
 	{
@@ -57,7 +66,7 @@ public class URLUtilities {
 		var getReq = new HttpGet(url);
 		
 		
-			getReq.addHeader("Authorization", ApplicationConfig.getInstance().getBearer());
+			getReq.addHeader("Authorization",bearer);
 			
 			if(headers!=null)
 				headers.entrySet().forEach(e->getReq.addHeader(e.getKey(), e.getValue()));

@@ -40,7 +40,7 @@ public class Categorie implements Serializable{
 	
 	@Override
 	public String toString() {
-		return getName();
+		return getName() + " " + getGame();
 	}
 	
 }

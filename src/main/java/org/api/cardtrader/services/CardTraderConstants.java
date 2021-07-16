@@ -1,4 +1,4 @@
-package org.api.cardtrader.tools;
+package org.api.cardtrader.services;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;

@@ -2,6 +2,8 @@ package org.api.cardtrader.modele;
 
 import java.io.Serializable;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Expansion implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -10,8 +12,14 @@ public class Expansion implements Serializable {
 	private Game game;
 	private String code;
 	private String name;
+	@SerializedName(value="game_id") int gameId;
 	
-	
+	public int getGameId() {
+		return gameId;
+	}
+	public void setGameId(int gameId) {
+		this.gameId = gameId;
+	}
 	public Integer getId() {
 		return id;
 	}

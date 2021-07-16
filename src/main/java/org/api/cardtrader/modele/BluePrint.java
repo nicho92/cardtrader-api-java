@@ -2,7 +2,7 @@ package org.api.cardtrader.modele;
 
 import java.io.Serializable;
 
-import org.api.cardtrader.enums.ConditionEnum;
+import org.api.cardtrader.enums.VersionEnum;
 
 public class BluePrint implements Serializable {
 
@@ -11,14 +11,83 @@ public class BluePrint implements Serializable {
 	private Categorie categorie;
 	private Expansion expansion;
 	private Game game;
-	
+	private Integer id;
 	private String name;
 	private String scryfallId;
-	private String language;
-	private Boolean foil;
-	private ConditionEnum condition;
+	private VersionEnum version;
+	private Integer mkmId;
+	private String slug;
+	private String collectorNumber;
+	private String imageUrl;
 	
 	
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+
+
+
+	public String getCollectorNumber() {
+		return collectorNumber;
+	}
+
+
+
+	public void setCollectorNumber(String collectorNumber) {
+		this.collectorNumber = collectorNumber;
+	}
+
+
+
+	@Override
+	public String toString() {
+		return getName();
+	}
+	
+	
+	
+	public String getSlug() {
+		return slug;
+	}
+
+
+
+	public void setSlug(String slug) {
+		this.slug = slug;
+	}
+
+
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public VersionEnum getVersion() {
+		return version;
+	}
+
+	public void setVersion(VersionEnum version) {
+		this.version = version;
+	}
+
+	public Integer getMkmId() {
+		return mkmId;
+	}
+
+	public void setMkmId(Integer mkmId) {
+		this.mkmId = mkmId;
+	}
+
 	public Categorie getCategorie() {
 		return categorie;
 	}
@@ -48,27 +117,6 @@ public class BluePrint implements Serializable {
 	}
 	public void setScryfallId(String scryfallId) {
 		this.scryfallId = scryfallId;
-	}
-	public String getLanguage() {
-		return language;
-	}
-	public void setLanguage(String language) {
-		this.language = language;
-	}
-	public Boolean getFoil() {
-		return foil;
-	}
-	public void setFoil(Boolean foil) {
-		this.foil = foil;
-	}
-	public ConditionEnum getCondition() {
-		return condition;
-	}
-	public void setCondition(ConditionEnum condition) {
-		this.condition = condition;
-	}
-	public static long getSerialversionuid() {
-		return serialVersionUID;
 	}
 	
 	

@@ -28,4 +28,10 @@ public class JsonTools {
 	public <T> T fromJson(JsonElement info, Class<T> class1) {
 		return gson.fromJson(info, class1);
 	}
+	
+	public JsonElement toJson(Object o)
+	{
+		return gson.toJsonTree(o);
+	}
+
 }

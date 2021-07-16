@@ -1,9 +1,11 @@
 package org.api.cardtrader.tools;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -73,12 +75,18 @@ public class URLUtilities {
 		return execute(getReq);
 	}
 
+	public void download(String url,File to) throws IOException
+	{
+		FileUtils.copyInputStreamToFile(doGet(url).getEntity().getContent(),to);
+	}
 	
-
 	public JsonElement extractJson(String url) throws IOException {
 		var reader = new JsonReader(new InputStreamReader(doGet(url).getEntity().getContent()));
 		JsonElement e= JsonParser.parseReader(reader);
-		logger.trace("return :" + e);
+		
+		
+		logger.debug("return :" + e);
+		
 		reader.close();
 		return e;
 		

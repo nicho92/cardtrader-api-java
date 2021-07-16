@@ -3,12 +3,17 @@ package org.api.cardtrader.services;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import javax.annotation.Nonnull;
+
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
+import org.api.cardtrader.enums.VersionEnum;
 import org.api.cardtrader.modele.App;
+import org.api.cardtrader.modele.BluePrint;
 import org.api.cardtrader.modele.Categorie;
 import org.api.cardtrader.modele.Expansion;
 import org.api.cardtrader.modele.Game;
@@ -20,6 +25,7 @@ import com.google.gson.JsonElement;
 
 public class ApplicationService {
 
+	private static final String BLUEPRINTS = "blueprints";
 	private static final String EXPANSIONS = "expansions";
 	private static final String CATEGORIES = "categories";
 	private static final String GAMES = "games";
@@ -29,16 +35,6 @@ public class ApplicationService {
 	protected Logger logger = Logger.getLogger(this.getClass());
 	
 	private CacheManager<JsonElement> caches;
-	
-	
-	public static void main(String[] args) throws IOException {
-		var serv = new ApplicationService(Files.readString(new File("D:\\Desktop\\key").toPath()));
-
-		serv.listExpansions().forEach(ex->{
-			System.out.println(ex);
-		});
-		
-	}
 	
 	
 	public ApplicationService(String token) {
@@ -108,5 +104,85 @@ public class ApplicationService {
 		ret.forEach(ex->ex.setGame(listGames().stream().filter(g->g.getId()==ex.getGameId()).findFirst().orElse(null)));
 		return ret;
 	}
+	
+	public List<BluePrint> listBluePrints(Integer categoryId, String name, Integer expansionid)
+	{
+		
+		var arr= caches.getCached(BLUEPRINTS, new Callable<JsonElement>() {
+			@Override
+			public JsonElement call() throws Exception {
+				
+				String extra=null;
+				
+				if(categoryId!=null)
+				{
+					extra="category_id="+categoryId;
+				}
+				
+				if(name!=null)
+				{
+					if(extra==null)
+							extra="name="+name.replace(" ", "%20");
+						else 
+							extra+="&name="+name.replace(" ", "%20");
+				}
+				
+				if(expansionid!=null)
+				{
+					if(extra==null)
+						extra="expansion_id="+expansionid;
+					else 
+						extra+="&expansion_id="+expansionid;
+				}
+				
+				return network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/"+BLUEPRINTS+""+(extra!=null?"?"+extra:"")).getAsJsonArray();
+			}
+		}).getAsJsonArray();
+	
+		List<BluePrint> ret = new ArrayList<>();
+		arr.forEach(a->{
+			  var obj = a.getAsJsonObject();
+			  var b = new BluePrint();
+	     	  b.setId(obj.get("id").getAsInt());
+	     	  b.setName(obj.get("name").getAsString());
+	     	  
+	     	  if(!obj.get("version").isJsonNull())
+	     		  b.setVersion(VersionEnum.valueOf(obj.get("version").getAsString().toUpperCase()));
+	     	 
+	     	  b.setSlug(obj.get("slug").getAsString());
+	     	  b.setMkmId(obj.get("mkm_id").getAsInt());
+	     	  b.setScryfallId(obj.get("scryfall_id").getAsString());
+	     	  b.setImageUrl(CardTraderConstants.CARDTRADER_WEBSITE_URI+obj.get("image_url").getAsString());
+			  b.setGame(listGames().stream().filter(g->g.getId()==obj.get("game_id").getAsInt()).findFirst().orElse(null));
+			  b.setCategorie(listCategories().stream().filter(g->g.getId()==obj.get("category_id").getAsInt()).findFirst().orElse(null));
+			  b.setExpansion(listExpansions().stream().filter(g->g.getId()==obj.get("expansion_id").getAsInt()).findFirst().orElse(null));
+			  b.setCollectorNumber(obj.get("fixed_properties").getAsJsonObject().get("collector_number").getAsString());
+			  ret.add(b);
+		});
+		
+		
+		return ret;
+	}
+	
+	
+	public void downloadProducts(@Nonnull Integer gameId, @Nonnull Integer categoryId,File f) throws IOException
+	{
+		String url=CardTraderConstants.CARDTRADER_API_URI+"/products/download";
+	
+		network.download(url+"?game_id="+gameId+"&category_id="+categoryId, f);
+	}
+	
+	
+
+	public static void main(String[] args) throws IOException {
+		var serv = new ApplicationService(Files.readString(new File("D:\\Desktop\\key").toPath()));
+		
+		serv.downloadProducts(1, 4, new File("d:/data.csv"));
+		
+	}
+	
+	
+	
+	
 	
 }

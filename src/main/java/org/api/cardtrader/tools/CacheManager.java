@@ -1,6 +1,5 @@
 package org.api.cardtrader.tools;
 
-import java.io.IOException;
 import java.util.concurrent.Callable;
 
 import org.apache.log4j.LogManager;
@@ -9,12 +8,12 @@ import org.apache.log4j.Logger;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
-public class CacheItem<T> {
+public class CacheManager<T> {
 		protected Logger logger = LogManager.getLogger(this.getClass());
 		private Cache<String, T> guava;
 		
 		
-		public CacheItem() {
+		public CacheManager() {
 			guava = CacheBuilder.newBuilder().build();
 		}
 		
@@ -22,12 +21,18 @@ public class CacheItem<T> {
 			guava.invalidateAll();
 			
 		}
+		
+		public void clear(String k) {
+			guava.invalidate(k);
+			
+		}
+		
 
 		public T getItem(String k) {
 			return guava.getIfPresent(k);
 		}
 
-		public void put(T value, String key) throws IOException {
+		public void put(T value, String key) {
 			guava.put(key, value);
 			
 		}
@@ -44,6 +49,7 @@ public class CacheItem<T> {
 			
 			return getItem(k);
 		}
+
 		
 	
 }

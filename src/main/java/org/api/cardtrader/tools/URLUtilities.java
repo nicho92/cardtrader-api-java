@@ -28,7 +28,6 @@ public class URLUtilities {
 	protected Logger logger = LogManager.getLogger(this.getClass());
 	private String bearer;
 	
-	
 	public URLUtilities() {
 		httpclient = HttpClients.custom().setUserAgent(CardTraderConstants.USER_AGENT_VALUE).setRedirectStrategy(new LaxRedirectStrategy()).build();
 		httpContext = new HttpClientContext();
@@ -79,6 +78,7 @@ public class URLUtilities {
 	public JsonElement extractJson(String url) throws IOException {
 		var reader = new JsonReader(new InputStreamReader(doGet(url).getEntity().getContent()));
 		JsonElement e= JsonParser.parseReader(reader);
+		logger.debug("return :" + e);
 		reader.close();
 		return e;
 		

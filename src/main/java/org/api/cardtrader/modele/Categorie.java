@@ -4,13 +4,16 @@ import java.io.Serializable;
 
 import org.api.cardtrader.enums.ConditionEnum;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Categorie implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	private Integer id;
 	private String name;
 	private Game game;
-	private ConditionEnum condition;
+	@SerializedName(value="game_id") int gameId;
+		private ConditionEnum condition;
 	
 	
 	public Integer getId() {
@@ -37,7 +40,14 @@ public class Categorie implements Serializable{
 	public void setCondition(ConditionEnum condition) {
 		this.condition = condition;
 	}
-	
+	public int getGameId() {
+		return gameId;
+	}
+	public void setGameId(int gameId) {
+		this.gameId = gameId;
+	}
+
+
 	@Override
 	public String toString() {
 		return getName() + " " + getGame();

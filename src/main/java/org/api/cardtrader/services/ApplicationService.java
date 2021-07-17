@@ -9,7 +9,6 @@ import java.util.concurrent.Callable;
 
 import javax.annotation.Nonnull;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
 import org.api.cardtrader.enums.VersionEnum;
 import org.api.cardtrader.modele.App;

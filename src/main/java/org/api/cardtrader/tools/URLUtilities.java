@@ -8,6 +8,7 @@ import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.impl.client.BasicCookieStore;
@@ -60,6 +61,24 @@ public class URLUtilities {
 	{
 		return doGet(url,null);
 	}
+	
+	public HttpResponse doPost(String url) throws IOException
+	{
+		return doPost(url,null);
+	}
+	
+	public HttpResponse doPost(String url,Map<String,String> headers) throws IOException{
+		var postReq = new HttpPost(url);
+
+		postReq.addHeader("Authorization",bearer);
+		
+		if(headers!=null)
+			headers.entrySet().forEach(e->postReq.addHeader(e.getKey(), e.getValue()));
+	
+		return execute(postReq);
+	}
+	
+	
 	
 	public HttpResponse doGet(String url,Map<String,String> headers) throws IOException
 	{

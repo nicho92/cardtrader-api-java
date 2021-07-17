@@ -16,6 +16,7 @@ import org.api.cardtrader.modele.BluePrint;
 import org.api.cardtrader.modele.Categorie;
 import org.api.cardtrader.modele.Expansion;
 import org.api.cardtrader.modele.Game;
+import org.api.cardtrader.modele.Order;
 import org.api.cardtrader.tools.CacheManager;
 import org.api.cardtrader.tools.JsonTools;
 import org.api.cardtrader.tools.URLUtilities;
@@ -24,6 +25,7 @@ import com.google.gson.JsonElement;
 
 public class ApplicationService {
 
+	private static final String ORDERS = "orders";
 	private static final String BLUEPRINTS = "blueprints";
 	private static final String EXPANSIONS = "expansions";
 	private static final String CATEGORIES = "categories";
@@ -104,6 +106,12 @@ public class ApplicationService {
 		return ret;
 	}
 	
+	public List<BluePrint> listBluePrints(Categorie category, String name, Expansion expansion)
+	{
+		return listBluePrints(category.getId(),name, expansion.getId());
+	}
+	
+	
 	public List<BluePrint> listBluePrints(Integer categoryId, String name, Integer expansionid)
 	{
 		
@@ -163,7 +171,7 @@ public class ApplicationService {
 		return ret;
 	}
 	
-	
+	//TODO doesn't work
 	public void downloadProducts(@Nonnull Integer gameId, @Nonnull Integer categoryId,File f) throws IOException
 	{
 		String url=CardTraderConstants.CARDTRADER_API_URI+"/products/download";
@@ -171,12 +179,28 @@ public class ApplicationService {
 		network.download(url+"?game_id="+gameId+"&category_id="+categoryId, f);
 	}
 	
+	public List<Order> listOrders()
+	{
+		return json.fromJsonList(caches.getCached(ORDERS, new Callable<JsonElement>() {
+			@Override
+			public JsonElement call() throws Exception {
+				return network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/"+ORDERS).getAsJsonArray();
+			}
+		}),Order.class);
+	}
+	
+	
+	
+	
 	
 
 	public static void main(String[] args) throws IOException {
 		var serv = new ApplicationService(Files.readString(new File("D:\\Desktop\\key").toPath()));
 		
-		serv.downloadProducts(1, 4, new File("d:/data.csv"));
+		serv.listOrders().forEach(o->{
+			
+			System.out.println(o);
+		});
 		
 	}
 	

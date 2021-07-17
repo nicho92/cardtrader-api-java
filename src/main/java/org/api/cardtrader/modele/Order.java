@@ -7,13 +7,15 @@ import java.util.List;
 
 import org.api.cardtrader.enums.StateEnum;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Order implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	private Integer id;
 	private String code;
-	private String transactionCode;
+	@SerializedName(value="transaction_code") private String transactionCode;
 	private User seller;
 	private User buyer;
 	private StateEnum state;

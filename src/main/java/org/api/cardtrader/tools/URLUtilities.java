@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
@@ -111,6 +112,19 @@ public class URLUtilities {
 		
 		logger.debug(ret);
 		
+	}
+
+	
+
+	public void doDelete(String url) throws IOException {
+		var delReq = new HttpDelete(url);
+		
+		HttpResponse resp = execute(delReq);
+		String ret = extractAndClose(resp);
+		if(resp.getStatusLine().getStatusCode()!=200)
+			throw new IOException(ret);
+		
+		logger.debug(ret);
 	}
 
 	

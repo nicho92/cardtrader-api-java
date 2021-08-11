@@ -239,6 +239,10 @@ public class CardTraderService {
 		network.doPut(CardTraderConstants.CARDTRADER_API_URI+"/products/"+identifier,obj);
 	}
 	
+	public void deleteProduct(@Nonnull Integer identifier) throws IOException
+	{
+		network.doDelete(CardTraderConstants.CARDTRADER_API_URI+"/products/"+identifier);
+	}
 	
 
 	public List<Order> listOrders()
@@ -255,7 +259,7 @@ public class CardTraderService {
 	
 	public static void main(String[] args) throws IOException {
 		var serv = new CardTraderService(Files.readString(new File("D:\\Desktop\\key").toPath()));
-		serv.updateProduct(107633896, 258.3,4,"no description",ConditionEnum.MODERATELY_PLAYED,"TEST");
+		
 		
 	}
 	

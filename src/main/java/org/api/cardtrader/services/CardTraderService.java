@@ -23,7 +23,7 @@ import org.api.cardtrader.tools.URLUtilities;
 
 import com.google.gson.JsonElement;
 
-public class ApplicationService {
+public class CardTraderService {
 
 	private static final String ORDERS = "orders";
 	private static final String BLUEPRINTS = "blueprints";
@@ -38,7 +38,7 @@ public class ApplicationService {
 	private CacheManager<JsonElement> caches;
 	
 	
-	public ApplicationService(String token) {
+	public CardTraderService(String token) {
 		json = new JsonTools();
 		network = new URLUtilities();
 		network.initToken(token);
@@ -152,10 +152,11 @@ public class ApplicationService {
 			  var b = new BluePrint();
 	     	  b.setId(obj.get("id").getAsInt());
 	     	  b.setName(obj.get("name").getAsString());
-	     	  
-	     	  if(!obj.get("version").isJsonNull())
-	     		  b.setVersion(VersionEnum.valueOf(obj.get("version").getAsString().toUpperCase()));
 	     	 
+	     	  if(!obj.get("version").isJsonNull() && !obj.get("version").getAsString().isBlank())
+	     		  b.setVersion(VersionEnum.valueOf(obj.get("version").getAsString().toUpperCase()));
+	     	  
+	     	  
 	     	  b.setSlug(obj.get("slug").getAsString());
 	     	  b.setMkmId(obj.get("mkm_id").getAsInt());
 	     	  b.setScryfallId(obj.get("scryfall_id").getAsString());
@@ -171,10 +172,10 @@ public class ApplicationService {
 		return ret;
 	}
 	
-	//TODO doesn't work
+	
 	public void downloadProducts(@Nonnull Integer gameId, @Nonnull Integer categoryId,File f) throws IOException
 	{
-		String url=CardTraderConstants.CARDTRADER_API_URI+"/products/download";
+		String url=CardTraderConstants.CARDTRADER_API_URI+"/products/export";
 	
 		network.download(url+"?game_id="+gameId+"&category_id="+categoryId, f);
 	}
@@ -195,13 +196,13 @@ public class ApplicationService {
 	
 
 	public static void main(String[] args) throws IOException {
-		var serv = new ApplicationService(Files.readString(new File("D:\\Desktop\\key").toPath()));
+		var serv = new CardTraderService(Files.readString(new File("D:\\Desktop\\key").toPath()));
 		
-		serv.listOrders().forEach(o->{
+		serv.listBluePrints(1,"Tiamat",null).forEach(p->{
 			
-			System.out.println(o);
-		});
-		
+			System.out.println(p.getName() +" "+p.getVersion() );
+			
+		});		
 	}
 	
 	

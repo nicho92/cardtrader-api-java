@@ -14,7 +14,7 @@ public class BluePrint implements Serializable {
 	private Integer id;
 	private String name;
 	private String scryfallId;
-	private VersionEnum version;
+	private VersionEnum version = VersionEnum.NORMAL;
 	private Integer mkmId;
 	private String slug;
 	private String collectorNumber;

@@ -4,13 +4,23 @@ import com.google.gson.annotations.SerializedName;
 
 public enum ConditionEnum {
 
-	@SerializedName(value = "Mint") 		MINT, 				
-	@SerializedName(value = "Near Mint") 		NEAR_MINT, 		
-	@SerializedName(value = "Slightly Played") 		SLIGHTLY_PLAYED, 		
-	@SerializedName(value = "Moderately Played") 		MODERATELY_PLAYED, 		
-	@SerializedName(value = "Played") 		PLAYED, 		
-	@SerializedName(value = "Heavily Played") 		HEAVILY_PLAYED,
-	@SerializedName(value = "Poor") 		POOR,
+	@SerializedName(value = "Mint") 			MINT("Mint"), 				
+	@SerializedName(value = "Near Mint") 		NEAR_MINT("Near Mint"), 		
+	@SerializedName(value = "Slightly Played") 	SLIGHTLY_PLAYED ("Slightly Played"), 		
+	@SerializedName(value = "Moderately Played")MODERATELY_PLAYED("Moderately Played"), 		
+	@SerializedName(value = "Played") 			PLAYED("Played"), 		
+	@SerializedName(value = "Heavily Played") 	HEAVILY_PLAYED("Heavily Played"),
+	@SerializedName(value = "Poor") 			POOR("Poor");
 	
 	
+	private String value;
+
+	ConditionEnum(String value)
+	{
+		this.value=value;
+	}
+	
+	public String getValue() {
+		return value;
+	}
 }

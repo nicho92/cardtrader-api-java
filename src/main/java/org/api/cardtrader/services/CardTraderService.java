@@ -10,6 +10,8 @@ import java.util.concurrent.Callable;
 import javax.annotation.Nonnull;
 
 import org.apache.log4j.Logger;
+import org.api.cardtrader.enums.ConditionEnum;
+import org.api.cardtrader.enums.Identifier;
 import org.api.cardtrader.enums.VersionEnum;
 import org.api.cardtrader.modele.App;
 import org.api.cardtrader.modele.BluePrint;
@@ -22,6 +24,7 @@ import org.api.cardtrader.tools.JsonTools;
 import org.api.cardtrader.tools.URLUtilities;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 public class CardTraderService {
 
@@ -115,7 +118,7 @@ public class CardTraderService {
 	public List<BluePrint> listBluePrints(Integer categoryId, String name, Integer expansionid)
 	{
 		
-		var arr= caches.getCached(BLUEPRINTS, new Callable<JsonElement>() {
+		var arr= caches.getCached(BLUEPRINTS+name, new Callable<JsonElement>() {
 			@Override
 			public JsonElement call() throws Exception {
 				
@@ -180,6 +183,64 @@ public class CardTraderService {
 		network.download(url+"?game_id="+gameId+"&category_id="+categoryId, f);
 	}
 	
+	
+	public Integer addProduct(@Nonnull String identifier, @Nonnull Identifier idRef, @Nonnull double price, @Nonnull int qty, String description,ConditionEnum condition,String userDataField) throws IOException
+	{
+		
+		var obj = new JsonObject();
+		
+		obj.addProperty(idRef.name(), identifier);
+		obj.addProperty("price", price);
+		obj.addProperty("quantity", qty);
+		
+		if(description!=null)
+			obj.addProperty("description", description);
+		
+		if(userDataField!=null)
+			obj.addProperty("user_data_field", userDataField);
+		
+		if(condition!=null)
+		{
+			var prop = new JsonObject();
+					   prop.addProperty("condition", condition.getValue());
+			
+					   obj.add("properties", prop);
+		}
+		return network.doPost(CardTraderConstants.CARDTRADER_API_URI+"/products",obj);
+		
+	}
+	
+	public void updateProduct(@Nonnull Integer identifier, Double price, Integer qty, String description,ConditionEnum condition,String userDataField) throws IOException
+	{
+		
+		var obj = new JsonObject();
+		
+		
+		if(price!=null)
+			obj.addProperty("price", price);
+		
+		
+		if(qty!=null)
+			obj.addProperty("quantity", qty);
+		
+		if(description!=null)
+			obj.addProperty("description", description);
+		
+		if(userDataField!=null)
+			obj.addProperty("user_data_field", userDataField);
+		
+		if(condition!=null)
+		{
+			var prop = new JsonObject();
+					   prop.addProperty("condition", condition.getValue());
+			
+					   obj.add("properties", prop);
+		}
+		network.doPut(CardTraderConstants.CARDTRADER_API_URI+"/products/"+identifier,obj);
+	}
+	
+	
+
 	public List<Order> listOrders()
 	{
 		return json.fromJsonList(caches.getCached(ORDERS, new Callable<JsonElement>() {
@@ -192,17 +253,10 @@ public class CardTraderService {
 	
 	
 	
-	
-	
-
 	public static void main(String[] args) throws IOException {
 		var serv = new CardTraderService(Files.readString(new File("D:\\Desktop\\key").toPath()));
+		serv.updateProduct(107633896, 258.3,4,"no description",ConditionEnum.MODERATELY_PLAYED,"TEST");
 		
-		serv.listBluePrints(1,"Tiamat",null).forEach(p->{
-			
-			System.out.println(p.getName() +" "+p.getVersion() );
-			
-		});		
 	}
 	
 	

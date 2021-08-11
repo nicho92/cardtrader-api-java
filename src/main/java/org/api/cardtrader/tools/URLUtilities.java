@@ -3,14 +3,18 @@ package org.api.cardtrader.tools;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -20,7 +24,9 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.api.cardtrader.services.CardTraderConstants;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 
@@ -30,8 +36,11 @@ public class URLUtilities {
 	private BasicCookieStore cookieStore;
 	protected Logger logger = LogManager.getLogger(this.getClass());
 	private String bearer;
+	private JsonTools json;
+	
 	
 	public URLUtilities() {
+		json = new JsonTools();
 		httpclient = HttpClients.custom().setUserAgent(CardTraderConstants.USER_AGENT_VALUE).setRedirectStrategy(new LaxRedirectStrategy()).build();
 		httpContext = new HttpClientContext();
 		cookieStore = new BasicCookieStore();
@@ -59,20 +68,58 @@ public class URLUtilities {
 	
 	public HttpResponse doGet(String url) throws IOException
 	{
-		return doGet(url,null);
+		return doGet(url,new HashMap<>());
 	}
 	
 	public HttpResponse doPost(String url) throws IOException
 	{
-		return doPost(url,null);
+		return doPost(url,new HashMap<>());
 	}
+	
+	public Integer doPost(String url,JsonElement el) throws IOException
+	{
+		
+		var postReq = new HttpPost(url);
+		postReq.addHeader("Authorization",bearer);
+		postReq.setEntity(new StringEntity(el.toString(),ContentType.APPLICATION_JSON));
+		logger.debug("posting " + el.toString());
+		HttpResponse resp = execute(postReq);
+		
+		String ret = extractAndClose(resp);
+		
+		if(resp.getStatusLine().getStatusCode()!=200)
+			throw new IOException(ret);
+		
+		
+		return json.fromJson(ret).getAsJsonObject().get("resource").getAsJsonObject().get("id").getAsInt();
+	
+	}
+	
+
+	public void doPut(String url, JsonElement el) throws IOException {
+
+		var postReq = new HttpPut(url);
+		postReq.addHeader("Authorization",bearer);
+		postReq.setEntity(new StringEntity(el.toString(),ContentType.APPLICATION_JSON));
+		logger.debug("put " + el.toString());
+		HttpResponse resp = execute(postReq);
+		
+		String ret = extractAndClose(resp);
+		
+		if(resp.getStatusLine().getStatusCode()!=200)
+			throw new IOException(ret);
+		
+		logger.debug(ret);
+		
+	}
+
 	
 	public HttpResponse doPost(String url,Map<String,String> headers) throws IOException{
 		var postReq = new HttpPost(url);
 
 		postReq.addHeader("Authorization",bearer);
 		
-		if(headers!=null)
+		if(!headers.isEmpty())
 			headers.entrySet().forEach(e->postReq.addHeader(e.getKey(), e.getValue()));
 	
 		return execute(postReq);

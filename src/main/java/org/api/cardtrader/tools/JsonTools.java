@@ -1,5 +1,6 @@
 package org.api.cardtrader.tools;
 
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,5 +34,13 @@ public class JsonTools {
 	{
 		return gson.toJsonTree(o);
 	}
+	
+	public JsonElement fromJson(String o)
+	{
+		return gson.fromJson(new StringReader(o), JsonElement.class);
+	}
+	
+	
+	
 
 }

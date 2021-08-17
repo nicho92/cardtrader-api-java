@@ -111,11 +111,11 @@ public class CardTraderService {
 	
 	public List<BluePrint> listBluePrints(Categorie category, String name, Expansion expansion)
 	{
-		return listBluePrints(category.getId(),name, expansion.getId());
+		return listBluePrintsByIds(category.getId(),name, expansion.getId());
 	}
 	
 	
-	public List<BluePrint> listBluePrints(Integer categoryId, String name, Integer expansionid)
+	public List<BluePrint> listBluePrintsByIds(Integer categoryId, String name, Integer expansionid)
 	{
 		
 		var arr= caches.getCached(BLUEPRINTS+name, new Callable<JsonElement>() {
@@ -167,7 +167,10 @@ public class CardTraderService {
 			  b.setGame(listGames().stream().filter(g->g.getId()==obj.get("game_id").getAsInt()).findFirst().orElse(null));
 			  b.setCategorie(listCategories().stream().filter(g->g.getId()==obj.get("category_id").getAsInt()).findFirst().orElse(null));
 			  b.setExpansion(listExpansions().stream().filter(g->g.getId()==obj.get("expansion_id").getAsInt()).findFirst().orElse(null));
-			  b.setCollectorNumber(obj.get("fixed_properties").getAsJsonObject().get("collector_number").getAsString());
+			 
+			  if(obj.get("fixed_properties").getAsJsonObject().get("collector_number")!=null)
+				  b.setCollectorNumber(obj.get("fixed_properties").getAsJsonObject().get("collector_number").getAsString());
+			  
 			  ret.add(b);
 		});
 		
@@ -254,6 +257,17 @@ public class CardTraderService {
 			}
 		}),Order.class);
 	}
+	
+	public List<Order> listOrdersDetails(int idOrder)
+	{
+		return json.fromJsonList(caches.getCached(ORDERS+idOrder, new Callable<JsonElement>() {
+			@Override
+			public JsonElement call() throws Exception {
+				return network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/"+ORDERS+"/"+idOrder).getAsJsonArray();
+			}
+		}),Order.class);
+	}
+	
 	
 	
 	

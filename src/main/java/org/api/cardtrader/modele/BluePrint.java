@@ -19,10 +19,37 @@ public class BluePrint implements Serializable {
 	private String slug;
 	private String collectorNumber;
 	private String imageUrl;
+	private boolean foiletched;
+	private boolean foil;
 	
 	
+	
+	public boolean isFoil() {
+		return foil;
+	}
+
+
+
+	public void setFoil(boolean foil) {
+		this.foil = foil;
+	}
+
+
+
 	public String getImageUrl() {
 		return imageUrl;
+	}
+
+
+
+	public boolean isFoiletched() {
+		return foiletched;
+	}
+
+
+
+	public void setFoiletched(boolean foiletched) {
+		this.foiletched = foiletched;
 	}
 
 

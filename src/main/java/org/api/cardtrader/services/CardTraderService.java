@@ -157,7 +157,13 @@ public class CardTraderService {
 	     	  b.setName(obj.get("name").getAsString());
 	     	 
 	     	  if(!obj.get("version").isJsonNull() && !obj.get("version").getAsString().isBlank())
-	     		  b.setVersion(VersionEnum.valueOf(obj.get("version").getAsString().toUpperCase()));
+	     	  {
+	     		  
+	     		  if(obj.get("version").getAsString().equals("Foil-Etched"))
+	     			  b.setFoiletched(true);
+	     		  else
+	     			  b.setVersion(VersionEnum.valueOf(obj.get("version").getAsString().toUpperCase()));
+	     	  }
 	     	  
 	     	  
 	     	  b.setSlug(obj.get("slug").getAsString());
@@ -170,6 +176,10 @@ public class CardTraderService {
 			 
 			  if(obj.get("fixed_properties").getAsJsonObject().get("collector_number")!=null)
 				  b.setCollectorNumber(obj.get("fixed_properties").getAsJsonObject().get("collector_number").getAsString());
+			  
+			  if(obj.get("fixed_properties").getAsJsonObject().get("mtg_foil")!=null)
+				  b.setFoil(obj.get("fixed_properties").getAsJsonObject().get("mtg_foil").getAsBoolean());
+			  
 			  
 			  ret.add(b);
 		});

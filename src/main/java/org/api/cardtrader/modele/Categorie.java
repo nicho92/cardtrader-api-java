@@ -15,7 +15,14 @@ public class Categorie implements Serializable{
 	@SerializedName(value="game_id") int gameId;
 		private ConditionEnum condition;
 	
+	public Categorie() {
+	}
 	
+	public Categorie(int id, String name)
+	{
+		this.id=id;
+		this.name=name;
+	}
 	public Integer getId() {
 		return id;
 	}

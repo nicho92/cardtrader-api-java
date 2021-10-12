@@ -19,13 +19,17 @@ public class BluePrint implements Serializable {
 	private String slug;
 	private String collectorNumber;
 	private String imageUrl;
-	
+	private String productUrl;
 	
 	public String getImageUrl() {
 		return imageUrl;
 	}
 
 
+	public BluePrint() {
+		// do nothing
+	}
+	
 
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
@@ -117,6 +121,18 @@ public class BluePrint implements Serializable {
 	}
 	public void setScryfallId(String scryfallId) {
 		this.scryfallId = scryfallId;
+	}
+
+
+
+	public String getProductUrl() {
+		return productUrl;
+	}
+
+
+
+	public void setProductUrl(String productUrl) {
+		this.productUrl = productUrl;
 	}
 	
 	

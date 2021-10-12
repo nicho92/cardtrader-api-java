@@ -2,14 +2,12 @@ package org.api.cardtrader.services;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
 import javax.annotation.Nonnull;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.api.cardtrader.enums.ConditionEnum;
 import org.api.cardtrader.enums.Identifier;
@@ -72,7 +70,7 @@ public class CardTraderService {
 			return null;
 		}
 	}
-	
+	 
 	
 	public List<Game> listGames()
 	{
@@ -110,12 +108,6 @@ public class CardTraderService {
 		}),Expansion.class);
 		ret.forEach(ex->ex.setGame(listGames().stream().filter(g->g.getId()==ex.getGameId()).findFirst().orElse(null)));
 		return ret;
-	}
-	
-	public static void main(String[] args) {
-		String k = "eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJjYXJkdHJhZGVyLXByb2R1Y3Rpb24iLCJzdWIiOiJhcHA6OCIsImF1ZCI6ImFwcDo4IiwiZXhwIjo0Nzg5NzE3MDAwLCJqdGkiOiJlODM1YmNlNy0xOTI3LTRlOGItOTA4NC1mMzk2NjI1OGFhZTMiLCJpYXQiOjE2MzQwNDM0MDAsIm5hbWUiOiJNYW5hZ2VtZW50U29mdHdhcmUifQ.VnbfRgDzcSa5InyeVDIaxEjKrCyiP5On1B6lb8hkhFhqMoKkREUeKa1SGKLNJF6JbLGKZ4BhH2r-ucaLJfCSu7onVDNB7s1b2gv7D92Xzyhtp_grOABHGSyTSUoFH5S7Uao0pr_4GhD1JH2Y_PB9dU_lhvKixJ6OeefpcEW7n2-1yxS_cDD0WF4S_DaBsBOuU7mBGRBJYpRfhTepmIuadEimMuI8J9bwmhII93QbccUJiHamxH1miigw4k6Edz1fufr822tqaHnPZ5sHDD04lEYu_l3osPXPDka86bgyhfC6uJhF3h0VnFn791VJlGXGciXF-zs1eIKY86lv25elCA";
-		
-		new CardTraderService(k).listGames();
 	}
 	
 	public List<MarketProduct> listMarketProduct(Expansion exp){

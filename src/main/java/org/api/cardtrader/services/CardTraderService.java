@@ -162,7 +162,6 @@ public class CardTraderService {
 	private MarketProduct parseMarket(JsonObject obj) {
 		var mk  = new MarketProduct();
 		
-		
 		if(!obj.get("description").isJsonNull())
 		 mk.setDescription(obj.get("description").getAsString());
 		
@@ -176,7 +175,7 @@ public class CardTraderService {
 			mk.setExpansion(getExpansionByCode(obj.get("expansion").getAsJsonObject().get("code").getAsString()));
 		
 		mk.setQty(obj.get("quantity").getAsInt());
-		mk.setPrice(new Price(obj.get("price_cents").getAsDouble(),obj.get("price_currency").getAsString()));
+		mk.setPrice(new Price(obj.get("price_cents").getAsDouble()/100,obj.get("price_currency").getAsString()));
 		mk.setBundledQuantity(obj.get("bundled_quantity").getAsInt());
 		mk.setIdBlueprint(obj.get("blueprint_id").getAsInt());
 		mk.setBundle(obj.get("bundle").getAsBoolean());
@@ -231,24 +230,14 @@ public class CardTraderService {
 			}
 		}).getAsJsonObject();
 		
-	
-		
 		arr.entrySet().forEach(id->{
-			
 			id.getValue().getAsJsonArray().forEach(obj->{
 				var mk = parseMarket(obj.getAsJsonObject());
 				mk.setId(Integer.parseInt(id.getKey()));
 				ret.add(mk);
 					
 			});
-			
-			
-			
-			
 		});
-		
-		
-		
 		return ret;
 	}
 	

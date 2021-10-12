@@ -20,6 +20,7 @@ import org.api.cardtrader.modele.Game;
 import org.api.cardtrader.modele.MarketProduct;
 import org.api.cardtrader.modele.Order;
 import org.api.cardtrader.modele.Price;
+import org.api.cardtrader.modele.User;
 import org.api.cardtrader.tools.CacheManager;
 import org.api.cardtrader.tools.JsonTools;
 import org.api.cardtrader.tools.URLUtilities;
@@ -36,13 +37,14 @@ public class CardTraderService {
 	private static final String EXPANSIONS = "expansions";
 	private static final String CATEGORIES = "categories";
 	private static final String GAMES = "games";
+	
 	private JsonTools json;
 	private URLUtilities network; 
 	private String token;
 	protected Logger logger = Logger.getLogger(this.getClass());
 	
 	private CacheManager<JsonElement> caches;
-	
+	private App app;
 	
 	public CardTraderService(String token) {
 		json = new JsonTools();
@@ -65,12 +67,17 @@ public class CardTraderService {
 	
 	public App getApp()
 	{
-		try {
-			return json.fromJson(network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/info"), App.class);
-		} catch (IOException e) {
-			logger.error(e);
-			return null;
-		}
+		
+		if(app==null)
+			try {
+				app = json.fromJson(network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/info"), App.class);
+			} catch (IOException e) {
+				logger.error(e);
+				return null;
+			}
+		
+		
+		return app;
 	}
 	
 	
@@ -155,16 +162,28 @@ public class CardTraderService {
 	private MarketProduct parseMarket(JsonObject obj) {
 		var mk  = new MarketProduct();
 		
+		
+		if(!obj.get("description").isJsonNull())
+		 mk.setDescription(obj.get("description").getAsString());
+		
+		if(obj.get("category_id")!=null)
+			mk.setCategorie(getCategoryById(obj.get("category_id").getAsInt()));
+		
+		if(obj.get("game_id")!=null)
+			mk.setGame(getGameById(obj.get("game_id").getAsInt()));
+		
+		if(obj.get("expansion")!=null)
+			mk.setExpansion(getExpansionByCode(obj.get("expansion").getAsJsonObject().get("code").getAsString()));
+		
 		mk.setQty(obj.get("quantity").getAsInt());
-		mk.setDescription(obj.get("description").getAsString());
 		mk.setPrice(new Price(obj.get("price_cents").getAsDouble(),obj.get("price_currency").getAsString()));
 		mk.setBundledQuantity(obj.get("bundled_quantity").getAsInt());
 		mk.setIdBlueprint(obj.get("blueprint_id").getAsInt());
-		mk.setCategorie(getCategoryById(obj.get("category_id").getAsInt()));
 		mk.setBundle(obj.get("bundle").getAsBoolean());
 		mk.setId(obj.get("id").getAsInt());			
 		mk.setNameEn(obj.get("name_en").getAsString());
-		mk.setGame(getGameById(obj.get("game_id").getAsInt()));
+		mk.setGraded(obj.get("graded").getAsBoolean());
+		
 		
 		  if(obj.get("properties_hash").getAsJsonObject().get("mtg_foil")!=null)
 			  	mk.setFoil(obj.get("properties_hash").getAsJsonObject().get("mtg_foil").getAsBoolean());
@@ -180,8 +199,23 @@ public class CardTraderService {
 		 
 		  if(obj.get("properties_hash").getAsJsonObject().get("condition")!=null)
 			  mk.setCondition(ConditionEnum.parseByLabel(obj.get("properties_hash").getAsJsonObject().get("condition").getAsString()));
-			  
-			  
+		  
+		  
+		  if(obj.get("user")!=null)
+		  {
+			  var user = new User();
+			  	  user.setCanSellViaHub(obj.get("user").getAsJsonObject().get("can_sell_via_hub").getAsBoolean());
+			  	  user.setTooManyCancel(obj.get("user").getAsJsonObject().get("too_many_request_for_cancel_as_seller").getAsBoolean());
+			  	  user.setUserType(obj.get("user").getAsJsonObject().get("user_type").getAsString());
+			  	  user.setUsername(obj.get("user").getAsJsonObject().get("username").getAsString());
+			  	  user.setId(obj.get("user").getAsJsonObject().get("id").getAsInt());
+			  	  user.setCountryCode(obj.get("user").getAsJsonObject().get("country_code").getAsString());
+			  	  
+			  mk.setSeller(user);
+		  }
+		  
+		  
+		  
 		return mk;
 	}
 
@@ -195,12 +229,24 @@ public class CardTraderService {
 			public JsonElement call() throws Exception {
 				return network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/"+MARKETPLACE_PRODUCTS+"?expansion_id="+expansionid);
 			}
-		}).getAsJsonArray();
+		}).getAsJsonObject();
 		
 	
-		arr.forEach(je->{
+		
+		arr.entrySet().forEach(id->{
+			
+			id.getValue().getAsJsonArray().forEach(obj->{
+				var mk = parseMarket(obj.getAsJsonObject());
+				mk.setId(Integer.parseInt(id.getKey()));
+				ret.add(mk);
+					
+			});
+			
+			
+			
 			
 		});
+		
 		
 		
 		return ret;

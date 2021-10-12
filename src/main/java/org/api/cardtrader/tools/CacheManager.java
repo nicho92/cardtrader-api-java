@@ -43,7 +43,7 @@ public class CacheManager<T> {
 				try {
 					put(call.call(),k);
 				} catch (Exception e) {
-					logger.error(e);
+					logger.error("error getting " + k,e);
 					return null;
 				}
 			

@@ -19,10 +19,12 @@ import org.api.cardtrader.modele.Expansion;
 import org.api.cardtrader.modele.Game;
 import org.api.cardtrader.modele.MarketProduct;
 import org.api.cardtrader.modele.Order;
+import org.api.cardtrader.modele.Price;
 import org.api.cardtrader.tools.CacheManager;
 import org.api.cardtrader.tools.JsonTools;
 import org.api.cardtrader.tools.URLUtilities;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -70,7 +72,7 @@ public class CardTraderService {
 			return null;
 		}
 	}
-	 
+	
 	
 	public List<Game> listGames()
 	{
@@ -98,6 +100,23 @@ public class CardTraderService {
 		return ret;
 	}
 	
+	public Categorie getCategoryById(int id)
+	{
+		return listCategories().stream().filter(c->c.getId()==id).findFirst().orElse(null);
+	}
+
+	public Game getGameById(int id) {
+		return listGames().stream().filter(c->c.getId()==id).findFirst().orElse(null);
+	}
+
+	public Expansion getExpansionById(int id) {
+		return listExpansions().stream().filter(c->c.getId()==id).findFirst().orElse(null);
+	}
+	
+	public Expansion getExpansionByCode(String code) {
+		return listExpansions().stream().filter(c->c.getCode().equalsIgnoreCase(code)).findFirst().orElse(null);
+	}
+	
 	public List<Expansion> listExpansions()
 	{
 		List<Expansion> ret = json.fromJsonList(caches.getCached(EXPANSIONS, new Callable<JsonElement>() {
@@ -115,6 +134,58 @@ public class CardTraderService {
 	}
 	
 	
+	public List<MarketProduct> listStock(){
+		
+		var ret = new ArrayList<MarketProduct>();
+		
+		try {
+			network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/products/export").getAsJsonArray().forEach(je->{
+				var obj = je.getAsJsonObject();
+				ret.add(parseMarket(obj));
+			});
+		} catch (IOException e) {
+			logger.error("error getting stock",e );
+		}
+		
+		return ret;
+	}
+	
+	
+
+	private MarketProduct parseMarket(JsonObject obj) {
+		var mk  = new MarketProduct();
+		
+		mk.setQty(obj.get("quantity").getAsInt());
+		mk.setDescription(obj.get("description").getAsString());
+		mk.setPrice(new Price(obj.get("price_cents").getAsDouble(),obj.get("price_currency").getAsString()));
+		mk.setBundledQuantity(obj.get("bundled_quantity").getAsInt());
+		mk.setIdBlueprint(obj.get("blueprint_id").getAsInt());
+		mk.setCategorie(getCategoryById(obj.get("category_id").getAsInt()));
+		mk.setBundle(obj.get("bundle").getAsBoolean());
+		mk.setId(obj.get("id").getAsInt());			
+		mk.setNameEn(obj.get("name_en").getAsString());
+		mk.setGame(getGameById(obj.get("game_id").getAsInt()));
+		
+		  if(obj.get("properties_hash").getAsJsonObject().get("mtg_foil")!=null)
+			  	mk.setFoil(obj.get("properties_hash").getAsJsonObject().get("mtg_foil").getAsBoolean());
+		  
+		  if(obj.get("properties_hash").getAsJsonObject().get("signed")!=null)
+			  	mk.setSigned(obj.get("properties_hash").getAsJsonObject().get("signed").getAsBoolean());
+		  
+		  if(obj.get("properties_hash").getAsJsonObject().get("altered")!=null)
+			  	mk.setAltered(obj.get("properties_hash").getAsJsonObject().get("altered").getAsBoolean());
+			  
+		  if(obj.get("properties_hash").getAsJsonObject().get("mtg_language")!=null)
+			  	mk.setLanguage(obj.get("properties_hash").getAsJsonObject().get("mtg_language").getAsString());
+		 
+		  if(obj.get("properties_hash").getAsJsonObject().get("condition")!=null)
+			  mk.setCondition(ConditionEnum.parseByLabel(obj.get("properties_hash").getAsJsonObject().get("condition").getAsString()));
+			  
+			  
+		return mk;
+	}
+
+
 	public List<MarketProduct> listMarketProduct(Integer expansionid)
 	{
 		var ret = new ArrayList<MarketProduct>();
@@ -122,7 +193,7 @@ public class CardTraderService {
 		var arr= caches.getCached(MARKETPLACE_PRODUCTS+expansionid, new Callable<JsonElement>() {
 			@Override
 			public JsonElement call() throws Exception {
-				return network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/"+MARKETPLACE_PRODUCTS+"?expansion_id="+expansionid).getAsJsonArray();
+				return network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/"+MARKETPLACE_PRODUCTS+"?expansion_id="+expansionid);
 			}
 		}).getAsJsonArray();
 		
@@ -170,7 +241,7 @@ public class CardTraderService {
 						extra+="&expansion_id="+expansionid;
 				}
 				
-				return network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/"+BLUEPRINTS+""+(extra!=null?"?"+extra:"")).getAsJsonArray();
+				return network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/"+BLUEPRINTS+""+(extra!=null?"?"+extra:""));
 			}
 		}).getAsJsonArray();
 	
@@ -188,9 +259,9 @@ public class CardTraderService {
 	     	  b.setSlug(obj.get("slug").getAsString());
 	     	  b.setMkmId(obj.get("mkm_id").getAsInt());
 	     	  b.setScryfallId(obj.get("scryfall_id").getAsString());
-	 		  b.setGame(listGames().stream().filter(g->g.getId()==obj.get("game_id").getAsInt()).findFirst().orElse(null));
-			  b.setCategorie(listCategories().stream().filter(g->g.getId()==obj.get("category_id").getAsInt()).findFirst().orElse(null));
-			  b.setExpansion(listExpansions().stream().filter(g->g.getId()==obj.get("expansion_id").getAsInt()).findFirst().orElse(null));
+	 		  b.setGame(getGameById(obj.get("game_id").getAsInt()));
+			  b.setCategorie(getCategoryById(obj.get("category_id").getAsInt()));
+			  b.setExpansion(getExpansionById(obj.get("expansion_id").getAsInt()));
 			  b.setProductUrl(CardTraderConstants.CARDTRADER_WEBSITE_URI+"cards/"+b.getSlug()+"?share_code="+CardTraderConstants.SHARE_CODE);
 		
 			  if(obj.get("fixed_properties").getAsJsonObject().get("collector_number")!=null)

@@ -14,6 +14,12 @@ public class Price implements Serializable {
 		
 	}
 	
+	
+	@Override
+	public String toString() {
+		return value +" " + currency;
+	}
+	
 	public Price(double value, String currencyCode)
 	{
 		setValue(value);

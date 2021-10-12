@@ -6,7 +6,7 @@ import org.api.cardtrader.enums.ConditionEnum;
 
 public class MarketProduct implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+	private Integer id;
 	private Integer idBlueprint;
 	private String nameEn;
 	private Integer qty;
@@ -19,15 +19,41 @@ public class MarketProduct implements Serializable {
 	private boolean bundle;
 	private Integer bundleSize;
 	private Integer bundledQuantity;
+	private Categorie categorie;
+	private Game game;
 	
 	private ConditionEnum condition;
 	private boolean signed;
 	private boolean foil;
-	private boolean language;
+	private String language;
 	private boolean altered;
 	
+	public Game getGame() {
+		return game;
+	}
+
+
+	public void setGame(Game game) {
+		this.game = game;
+	}
+	@Override
+	public String toString() {
+		return getNameEn();
+	}
 	
 	
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	public Categorie getCategorie() {
+		return categorie;
+	}
+	public void setCategorie(Categorie categorie) {
+		this.categorie = categorie;
+	}
 	public Integer getIdBlueprint() {
 		return idBlueprint;
 	}
@@ -118,22 +144,22 @@ public class MarketProduct implements Serializable {
 	public void setFoil(boolean foil) {
 		this.foil = foil;
 	}
-	public boolean isLanguage() {
-		return language;
-	}
-	public void setLanguage(boolean language) {
-		this.language = language;
-	}
 	public boolean isAltered() {
 		return altered;
 	}
 	public void setAltered(boolean altered) {
 		this.altered = altered;
 	}
-	public static long getSerialversionuid() {
-		return serialVersionUID;
+
+
+	public String getLanguage() {
+		return language;
 	}
-	
-	
+
+
+	public void setLanguage(String language) {
+		this.language = language;
+	}
+
 
 }

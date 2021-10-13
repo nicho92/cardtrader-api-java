@@ -20,13 +20,15 @@ public class Order implements Serializable {
 	private User buyer;
 	private StateEnum state;
 	private int size;
-	private Date dateCreditAddedToSeller;
-	private Date dateSend;
-	private Date dateCancel;
+	@SerializedName(value = "credit_added_to_seller_at") private Date dateCreditAddedToSeller;
+	@SerializedName(value = "sent_at") private Date dateSend;
+	@SerializedName(value = "cancelled_at") private Date dateCancel;
+	@SerializedName(value = "created_at") private Date dateCreation;
+	@SerializedName(value = "paid_at") private Date datePaid;
 	private User cancelRequester;
 	private Money sellerTotal;
 	private Date datePresaleEnd;
-	private double feePercentage;
+	@SerializedName(value = "fee_percentage") private double feePercentage;
 	private String feeReason="seller";
 	private Money sellerSubtotal;
 	private int packagingNumber;
@@ -41,6 +43,26 @@ public class Order implements Serializable {
 		orderItems = new ArrayList<>();
 	}
 	
+
+	public Date getDatePaid() {
+		return datePaid;
+	}
+
+	public void setDatePaid(Date datePaid) {
+		this.datePaid = datePaid;
+	}
+	public Date getDateCreation() {
+		return dateCreation;
+	}
+
+	public void setDateCreation(Date dateCreation) {
+		this.dateCreation = dateCreation;
+	}
+
+	public Boolean getPresale() {
+		return presale;
+	}
+
 	public Integer getId() {
 		return id;
 	}

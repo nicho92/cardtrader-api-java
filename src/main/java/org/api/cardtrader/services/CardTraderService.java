@@ -406,13 +406,18 @@ public class CardTraderService {
 		network.doDelete(CardTraderConstants.CARDTRADER_API_URI+"/products/"+identifier);
 	}
 	
-
-	public List<Order> listOrders()
+	private int pageMin;
+	public List<Order> listOrders(Integer p)
 	{
-		return json.fromJsonList(caches.getCached(ORDERS, new Callable<JsonElement>() {
+		pageMin=p;
+		
+		if(p==null)
+			pageMin=1;
+		
+		return json.fromJsonList(caches.getCached(ORDERS+pageMin, new Callable<JsonElement>() {
 			@Override
 			public JsonElement call() throws Exception {
-				return network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/"+ORDERS).getAsJsonArray();
+				return network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/"+ORDERS+"?limit=100&page="+pageMin).getAsJsonArray();
 			}
 		}),Order.class);
 	}

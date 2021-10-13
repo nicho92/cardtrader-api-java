@@ -4,5 +4,6 @@ public enum VersionEnum {
 	NORMAL,
 	BORDERLESS, 
 	SHOWCASE, 
-	EXTENDED_ART;
+	EXTENDED_ART,
+	FOIL_ETCHED;
 }

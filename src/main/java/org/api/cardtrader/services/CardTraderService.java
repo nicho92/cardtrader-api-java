@@ -25,7 +25,6 @@ import org.api.cardtrader.tools.CacheManager;
 import org.api.cardtrader.tools.JsonTools;
 import org.api.cardtrader.tools.URLUtilities;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -288,7 +287,7 @@ public class CardTraderService {
 	     	  b.setName(obj.get("name").getAsString());
 	     	 
 	     	  if(!obj.get("version").isJsonNull() && !obj.get("version").getAsString().isBlank())
-	     		  b.setVersion(VersionEnum.valueOf(obj.get("version").getAsString().toUpperCase()));
+	     		  b.setVersion(VersionEnum.valueOf(obj.get("version").getAsString().toUpperCase().replace("-", "_")));
 	     	  
 	     	  
 	     	  b.setSlug(obj.get("slug").getAsString());

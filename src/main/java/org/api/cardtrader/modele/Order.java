@@ -30,11 +30,11 @@ public class Order implements Serializable {
 	private String feeReason="seller";
 	private Money sellerSubtotal;
 	private int packagingNumber;
-	private Address shippingAddress;
-	private Address billingAddress;
+	@SerializedName(value = "order_shipping_address") private Address shippingAddress;
+	@SerializedName(value = "order_billing_address") private Address billingAddress;
 	private ShippingMethod shippingMethod;
 	private Boolean presale;
-	private List<OrderItem> orderItems;
+	@SerializedName(value = "order_items") private List<OrderItem> orderItems;
 	
 	
 	public Order() {

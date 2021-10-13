@@ -208,7 +208,6 @@ public class CardTraderService {
 			  	  user.setUsername(obj.get("user").getAsJsonObject().get("username").getAsString());
 			  	  user.setId(obj.get("user").getAsJsonObject().get("id").getAsInt());
 			  	  user.setCountryCode(obj.get("user").getAsJsonObject().get("country_code").getAsString());
-			  	  
 			  mk.setSeller(user);
 		  }
 		  

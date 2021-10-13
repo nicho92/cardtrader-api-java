@@ -216,6 +216,27 @@ public class CardTraderService {
 		  
 		return mk;
 	}
+	
+	
+	public List<MarketProduct> listMarketProduct(BluePrint bp)
+	{
+		var ret = new ArrayList<MarketProduct>();
+		
+		var arr= caches.getCached(MARKETPLACE_PRODUCTS+bp.getExpansion().getId(), new Callable<JsonElement>() {
+			@Override
+			public JsonElement call() throws Exception {
+				return network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/"+MARKETPLACE_PRODUCTS+"?expansion_id="+bp.getExpansion().getId());
+			}
+		}).getAsJsonObject();
+		
+		arr.get(String.valueOf(bp.getId())).getAsJsonArray().forEach(obj->{
+ 
+				var mk = parseMarket(obj.getAsJsonObject());
+				mk.setId(bp.getId());
+				ret.add(mk);
+		});
+		return ret;
+	}
 
 
 	public List<MarketProduct> listMarketProduct(Integer expansionid)

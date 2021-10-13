@@ -11,7 +11,7 @@ public class MainTest {
 
 	public static void main(String[] args) throws IOException {
 		CardTraderService serv = new CardTraderService(FileUtils.readFileToString(new File("c:/key.txt"),Charset.defaultCharset()));
-
+		
 		serv.listMarketProduct(17).forEach(c->
 			System.out.println(c.getNameEn() + " " + c.getExpansion() + " "+  c.getPrice() + " " + c.getCondition() + " " + c.getSeller())
 		);

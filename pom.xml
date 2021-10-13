@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.nicho92</groupId>
 	<artifactId>cardtrader-api-java</artifactId>
-	<version>0.0.8</version>
+	<version>0.0.9</version>
 	<packaging>jar</packaging>
 	<name>cardtrader-api-java</name>
 	<description>Java implementation for MTGStock API</description>

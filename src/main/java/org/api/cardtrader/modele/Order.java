@@ -36,7 +36,7 @@ public class Order implements Serializable {
 	@SerializedName(value = "order_billing_address") private Address billingAddress;
 	private ShippingMethod shippingMethod;
 	private Boolean presale;
-	@SerializedName(value = "order_items") private List<OrderItem> orderItems;
+	@SerializedName(value = "order_items") private List<MarketProduct> orderItems;
 	
 	
 	public Order() {
@@ -189,10 +189,10 @@ public class Order implements Serializable {
 	public void setPresale(Boolean presale) {
 		this.presale = presale;
 	}
-	public List<OrderItem> getOrderItems() {
+	public List<MarketProduct> getOrderItems() {
 		return orderItems;
 	}
-	public void setOrderItems(List<OrderItem> orderItems) {
+	public void setOrderItems(List<MarketProduct> orderItems) {
 		this.orderItems = orderItems;
 	}
 	

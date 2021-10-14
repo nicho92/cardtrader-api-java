@@ -79,6 +79,17 @@ public class CardTraderService {
 		return app;
 	}
 	
+	public List<Expansion> listExpansions()
+	{
+		List<Expansion> ret = json.fromJsonList(caches.getCached(EXPANSIONS, new Callable<JsonElement>() {
+			@Override
+			public JsonElement call() throws Exception {
+				return network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/"+EXPANSIONS).getAsJsonArray();
+			}
+		}),Expansion.class);
+		ret.forEach(ex->ex.setGame(listGames().stream().filter(g->g.getId()==ex.getGameId()).findFirst().orElse(null)));
+		return ret;
+	}
 	
 	public List<Game> listGames()
 	{
@@ -123,17 +134,6 @@ public class CardTraderService {
 		return listExpansions().stream().filter(c->c.getCode().equalsIgnoreCase(code)).findFirst().orElse(null);
 	}
 	
-	public List<Expansion> listExpansions()
-	{
-		List<Expansion> ret = json.fromJsonList(caches.getCached(EXPANSIONS, new Callable<JsonElement>() {
-			@Override
-			public JsonElement call() throws Exception {
-				return network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/"+EXPANSIONS).getAsJsonArray();
-			}
-		}),Expansion.class);
-		ret.forEach(ex->ex.setGame(listGames().stream().filter(g->g.getId()==ex.getGameId()).findFirst().orElse(null)));
-		return ret;
-	}
 	
 	public List<MarketProduct> listMarketProduct(Expansion exp){
 		return listMarketProduct(exp.getId()); 
@@ -406,11 +406,11 @@ public class CardTraderService {
 	}
 	
 	private int pageMin;
-	public List<Order> listOrders(Integer p)
+	public List<Order> listOrders(Integer page)
 	{
-		pageMin=p;
+		pageMin=page;
 		
-		if(p==null)
+		if(page==null)
 			pageMin=1;
 		
 		return json.fromJsonList(caches.getCached(ORDERS+pageMin, new Callable<JsonElement>() {

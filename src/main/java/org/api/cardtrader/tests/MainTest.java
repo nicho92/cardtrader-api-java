@@ -16,7 +16,6 @@ public class MainTest {
 			System.out.println(c.getNameEn() + " " + c.getExpansion() + " "+  c.getPrice() + " " + c.getCondition() + " " + c.getSeller())
 		);
 		
-		
 	}
 
 }

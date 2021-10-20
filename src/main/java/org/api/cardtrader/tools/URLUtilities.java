@@ -141,7 +141,7 @@ public class URLUtilities {
 	
 	public HttpResponse doGet(String url,Map<String,String> headers) throws IOException
 	{
-		logger.debug("Parsing url " + url);
+		logger.info("Parsing url " + url);
 		var getReq = new HttpGet(url);
 		
 		

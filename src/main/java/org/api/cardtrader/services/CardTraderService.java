@@ -8,6 +8,7 @@ import java.util.concurrent.Callable;
 
 import javax.annotation.Nonnull;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.api.cardtrader.enums.ConditionEnum;
 import org.api.cardtrader.enums.Identifier;
@@ -137,6 +138,26 @@ public class CardTraderService {
 	
 	public List<MarketProduct> listMarketProduct(Expansion exp){
 		return listMarketProduct(exp.getId()); 
+	}
+	
+	
+	public List<MarketProduct> listStock(String search){
+		
+		var ret = new ArrayList<MarketProduct>();
+		
+		try {
+			network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/products/export").getAsJsonArray().forEach(je->{
+				
+				if(je.toString().toLowerCase().contains(search.toLowerCase()))
+				{
+					ret.add(parseMarket(je.getAsJsonObject()));
+				}
+			});
+		} catch (IOException e) {
+			logger.error("error getting stock",e );
+		}
+		
+		return ret;
 	}
 	
 	

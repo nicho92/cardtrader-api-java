@@ -348,8 +348,6 @@ public class CardTraderService {
 			  {
 				  b.setImageUrl("https://api.scryfall.com/cards/"+b.getScryfallId()+"?format=image");
 			  }
-	    		
-			  
 			  ret.add(b);
 		});
 		

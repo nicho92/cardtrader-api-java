@@ -6,6 +6,6 @@ public enum StateEnum {
 	
 	@SerializedName(value = "paid") 		PAID, 				
 	@SerializedName(value = "done") 		DONE, 		
-	
+	@SerializedName(value = "closed") 		CLOSED, 		
 
 }

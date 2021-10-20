@@ -5,7 +5,7 @@ import java.util.Currency;
 
 public class Price implements Serializable {
 
-	private double value;
+	private Double value;
 	private Currency currency;
 	
 	
@@ -20,13 +20,13 @@ public class Price implements Serializable {
 		return value +" " + currency;
 	}
 	
-	public Price(double value, String currencyCode)
+	public Price(Double value, String currencyCode)
 	{
 		setValue(value);
 		setCurrency(currencyCode);
 	}
 	
-	public double getValue() {
+	public Double getValue() {
 		return value;
 	}
 	public void setValue(double value) {

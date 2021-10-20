@@ -8,7 +8,6 @@ import java.util.concurrent.Callable;
 
 import javax.annotation.Nonnull;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.api.cardtrader.enums.ConditionEnum;
 import org.api.cardtrader.enums.Identifier;
@@ -195,7 +194,7 @@ public class CardTraderService {
 			mk.setExpansion(getExpansionByCode(obj.get("expansion").getAsJsonObject().get("code").getAsString()));
 		
 		mk.setQty(obj.get("quantity").getAsInt());
-		mk.setPrice(new Price(obj.get("price_cents").getAsDouble()/100,obj.get("price_currency").getAsString()));
+		mk.setPrice(new Price(Double.valueOf((obj.get("price_cents").getAsInt()/100.0)),obj.get("price_currency").getAsString()));
 		mk.setBundledQuantity(obj.get("bundled_quantity").getAsInt());
 		mk.setIdBlueprint(obj.get("blueprint_id").getAsInt());
 		mk.setBundle(obj.get("bundle").getAsBoolean());
@@ -250,8 +249,7 @@ public class CardTraderService {
 		}).getAsJsonObject();
 		
 		arr.get(String.valueOf(bp.getId())).getAsJsonArray().forEach(obj->{
- 
-				var mk = parseMarket(obj.getAsJsonObject());
+ 				var mk = parseMarket(obj.getAsJsonObject());
 				mk.setId(bp.getId());
 				ret.add(mk);
 		});
@@ -335,7 +333,7 @@ public class CardTraderService {
 	     	  b.setMkmId(obj.get("mkm_id").getAsInt());
 	     	  b.setScryfallId(obj.get("scryfall_id").getAsString());
 	 		  b.setGame(getGameById(obj.get("game_id").getAsInt()));
-			  b.setCategorie(getCategoryById(obj.get("category_id").getAsInt()));
+			  b.setCategorie(getCategoryById(obj.get("categor)y_id").getAsInt()));
 			  b.setExpansion(getExpansionById(obj.get("expansion_id").getAsInt()));
 			  b.setProductUrl(CardTraderConstants.CARDTRADER_WEBSITE_URI+"cards/"+b.getSlug()+"?share_code="+CardTraderConstants.SHARE_CODE);
 		

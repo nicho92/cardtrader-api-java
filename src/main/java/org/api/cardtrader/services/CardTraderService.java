@@ -333,10 +333,10 @@ public class CardTraderService {
 	     	  b.setMkmId(obj.get("mkm_id").getAsInt());
 	     	  b.setScryfallId(obj.get("scryfall_id").getAsString());
 	 		  b.setGame(getGameById(obj.get("game_id").getAsInt()));
-			  b.setCategorie(getCategoryById(obj.get("categor)y_id").getAsInt()));
+			  b.setCategorie(getCategoryById(obj.get("category_id").getAsInt()));
 			  b.setExpansion(getExpansionById(obj.get("expansion_id").getAsInt()));
 			  b.setProductUrl(CardTraderConstants.CARDTRADER_WEBSITE_URI+"cards/"+b.getSlug()+"?share_code="+CardTraderConstants.SHARE_CODE);
-		
+			  
 			  if(obj.get("fixed_properties").getAsJsonObject().get("collector_number")!=null)
 				  b.setCollectorNumber(obj.get("fixed_properties").getAsJsonObject().get("collector_number").getAsString());
 			  
@@ -387,6 +387,20 @@ public class CardTraderService {
 		return network.doPost(CardTraderConstants.CARDTRADER_API_URI+"/products",obj);
 		
 	}
+	
+	
+	public void addProductToCart(MarketProduct mk) throws IOException
+	{
+		
+		var obj = new JsonObject(); 
+		obj.addProperty("product_id", mk.getIdBlueprint());
+		obj.addProperty("quantity", mk.getQty());
+		obj.addProperty("via_cardtrader_zero", "true");
+		
+		
+		network.doPost(CardTraderConstants.CARDTRADER_API_URI+"/cart/add",obj);
+	}
+	
 	
 	public void updateProduct(@Nonnull Integer identifier, Double price, Integer qty, String description,ConditionEnum condition,String userDataField) throws IOException
 	{

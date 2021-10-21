@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 import org.api.cardtrader.enums.ConditionEnum;
 import org.api.cardtrader.enums.Identifier;
 import org.api.cardtrader.enums.VersionEnum;
+import org.api.cardtrader.modele.Address;
 import org.api.cardtrader.modele.App;
 import org.api.cardtrader.modele.BluePrint;
 import org.api.cardtrader.modele.Categorie;
@@ -239,21 +240,7 @@ public class CardTraderService {
 	
 	public List<MarketProduct> listMarketProduct(BluePrint bp)
 	{
-		var ret = new ArrayList<MarketProduct>();
-		
-		var arr= caches.getCached(MARKETPLACE_PRODUCTS+bp.getExpansion().getId(), new Callable<JsonElement>() {
-			@Override
-			public JsonElement call() throws Exception {
-				return network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/"+MARKETPLACE_PRODUCTS+"?expansion_id="+bp.getExpansion().getId());
-			}
-		}).getAsJsonObject();
-		
-		arr.get(String.valueOf(bp.getId())).getAsJsonArray().forEach(obj->{
- 				var mk = parseMarket(obj.getAsJsonObject());
-				mk.setId(bp.getId());
-				ret.add(mk);
-		});
-		return ret;
+		return listMarketProduct(bp.getExpansion().getId());
 	}
 
 
@@ -271,9 +258,7 @@ public class CardTraderService {
 		arr.entrySet().forEach(id->{
 			id.getValue().getAsJsonArray().forEach(obj->{
 				var mk = parseMarket(obj.getAsJsonObject());
-				mk.setId(Integer.parseInt(id.getKey()));
 				ret.add(mk);
-					
 			});
 		});
 		return ret;
@@ -384,21 +369,23 @@ public class CardTraderService {
 			
 					   obj.add("properties", prop);
 		}
-		return network.doPost(CardTraderConstants.CARDTRADER_API_URI+"/products",obj);
+		return network.doPost(CardTraderConstants.CARDTRADER_API_URI+"/products",obj).get("resource").getAsJsonObject().get("id").getAsInt();
 		
 	}
 	
 	
-	public void addProductToCart(MarketProduct mk) throws IOException
+	public void addProductToCart(MarketProduct mk, Boolean ctZero, Integer qty, Address billingAddr, Address shippingAddr) throws IOException
 	{
-		
 		var obj = new JsonObject(); 
-		obj.addProperty("product_id", mk.getIdBlueprint());
-		obj.addProperty("quantity", mk.getQty());
-		obj.addProperty("via_cardtrader_zero", "true");
+		obj.addProperty("product_id", mk.getId());
+		obj.addProperty("quantity", qty);
+		obj.addProperty("via_cardtrader_zero", ctZero);
+		obj.add("billing_address", json.toJson(billingAddr));
+		obj.add("shipping_address",json.toJson(shippingAddr));
+		var ret = network.doPost(CardTraderConstants.CARDTRADER_API_URI+"/cart/add",obj);
 		
+		logger.debug(ret);
 		
-		network.doPost(CardTraderConstants.CARDTRADER_API_URI+"/cart/add",obj);
 	}
 	
 	

@@ -2,6 +2,8 @@ package org.api.cardtrader.modele;
 
 import java.io.Serializable;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Address implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -10,13 +12,10 @@ public class Address implements Serializable {
 	private String street;
 	private String zip;
 	private String city;
-	private String stateOrProvince;
+	@SerializedName(value = "state_or_province")private  String stateOrProvince;
 	private String countryCode;
 	private String vatNumber;
 	private String country;
-	
-	
-	
 	
 	public Integer getId() {
 		return id;

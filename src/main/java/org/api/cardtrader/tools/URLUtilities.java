@@ -26,6 +26,7 @@ import org.apache.log4j.Logger;
 import org.api.cardtrader.services.CardTraderConstants;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 
@@ -75,7 +76,7 @@ public class URLUtilities {
 		return doPost(url,new HashMap<>());
 	}
 	
-	public Integer doPost(String url,JsonElement el) throws IOException
+	public JsonObject doPost(String url,JsonElement el) throws IOException
 	{
 		
 		var postReq = new HttpPost(url);
@@ -90,7 +91,7 @@ public class URLUtilities {
 			throw new IOException(ret);
 		
 		
-		return json.fromJson(ret).getAsJsonObject().get("resource").getAsJsonObject().get("id").getAsInt();
+		return json.fromJson(ret).getAsJsonObject();
 	
 	}
 	

@@ -20,6 +20,7 @@ public class Order implements Serializable {
 	private User buyer;
 	private StateEnum state;
 	private int size;
+	private Price total;
 	@SerializedName(value = "credit_added_to_seller_at") private Date dateCreditAddedToSeller;
 	@SerializedName(value = "sent_at") private Date dateSend;
 	@SerializedName(value = "cancelled_at") private Date dateCancel;
@@ -194,6 +195,16 @@ public class Order implements Serializable {
 	}
 	public void setOrderItems(List<MarketProduct> orderItems) {
 		this.orderItems = orderItems;
+	}
+
+
+	public Price getTotal() {
+		return total;
+	}
+
+
+	public void setTotal(Price total) {
+		this.total = total;
 	}
 	
 	

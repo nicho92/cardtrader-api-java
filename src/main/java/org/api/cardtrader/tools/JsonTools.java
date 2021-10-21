@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 
@@ -14,7 +15,7 @@ public class JsonTools {
 	private Gson gson;
 	
 	public JsonTools() {
-		gson = new Gson();
+		gson = new GsonBuilder().create();
 	}
 	
 	
@@ -39,8 +40,7 @@ public class JsonTools {
 	{
 		return gson.fromJson(new StringReader(o), JsonElement.class);
 	}
-	
-	
-	
+
+
 
 }

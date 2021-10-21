@@ -8,7 +8,7 @@ public class MarketProduct implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private Integer id;
 	private Integer idBlueprint;
-	private String nameEn;
+	private String name;
 	private Integer qty;
 	private Price price;
 	private String description;
@@ -38,7 +38,7 @@ public class MarketProduct implements Serializable {
 	}
 	@Override
 	public String toString() {
-		return getNameEn();
+		return getName();
 	}
 	
 	
@@ -60,11 +60,11 @@ public class MarketProduct implements Serializable {
 	public void setIdBlueprint(Integer idBlueprint) {
 		this.idBlueprint = idBlueprint;
 	}
-	public String getNameEn() {
-		return nameEn;
+	public String getName() {
+		return name;
 	}
-	public void setNameEn(String nameEn) {
-		this.nameEn = nameEn;
+	public void setName(String nameEn) {
+		this.name = nameEn;
 	}
 	public Integer getQty() {
 		return qty;
@@ -160,6 +160,5 @@ public class MarketProduct implements Serializable {
 	public void setLanguage(String language) {
 		this.language = language;
 	}
-
 
 }

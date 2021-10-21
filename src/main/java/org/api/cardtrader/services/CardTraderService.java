@@ -11,6 +11,7 @@ import javax.annotation.Nonnull;
 import org.apache.log4j.Logger;
 import org.api.cardtrader.enums.ConditionEnum;
 import org.api.cardtrader.enums.Identifier;
+import org.api.cardtrader.enums.StateEnum;
 import org.api.cardtrader.enums.VersionEnum;
 import org.api.cardtrader.modele.Address;
 import org.api.cardtrader.modele.App;
@@ -88,7 +89,7 @@ public class CardTraderService {
 				return network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/"+EXPANSIONS).getAsJsonArray();
 			}
 		}),Expansion.class);
-		ret.forEach(ex->ex.setGame(listGames().stream().filter(g->g.getId()==ex.getGameId()).findFirst().orElse(null)));
+		ret.forEach(ex->ex.setGame(getGameById(ex.getGameId())));
 		return ret;
 	}
 	
@@ -112,7 +113,7 @@ public class CardTraderService {
 		}),Categorie.class);
 		
 		
-		ret.forEach(ex->ex.setGame(listGames().stream().filter(g->g.getId()==ex.getGameId()).findFirst().orElse(null)));
+		ret.forEach(ex->ex.setGame(getGameById(ex.getGameId())));
 
 		
 		return ret;
@@ -200,7 +201,7 @@ public class CardTraderService {
 		mk.setIdBlueprint(obj.get("blueprint_id").getAsInt());
 		mk.setBundle(obj.get("bundle").getAsBoolean());
 		mk.setId(obj.get("id").getAsInt());			
-		mk.setNameEn(obj.get("name_en").getAsString());
+		mk.setName(obj.get("name_en").getAsString());
 		mk.setGraded(obj.get("graded").getAsBoolean());
 		
 		
@@ -263,6 +264,13 @@ public class CardTraderService {
 		});
 		return ret;
 	}
+	
+
+	public List<BluePrint> listBluePrints(String string) {
+		return listBluePrints(null, string, null);
+		
+	}
+	
 	
 	public List<BluePrint> listBluePrints(Categorie category, String name, Expansion expansion)
 	{
@@ -427,26 +435,54 @@ public class CardTraderService {
 	public List<Order> listOrders(Integer page)
 	{
 		pageMin=page;
+		var ret = new ArrayList<Order>();
+		
 		
 		if(page==null)
 			pageMin=1;
 		
-		return json.fromJsonList(caches.getCached(ORDERS+pageMin, new Callable<JsonElement>() {
+		var arr = caches.getCached(ORDERS+pageMin, new Callable<JsonElement>() {
 			@Override
 			public JsonElement call() throws Exception {
 				return network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/"+ORDERS+"?limit=100&page="+pageMin).getAsJsonArray();
 			}
-		}),Order.class);
+		}).getAsJsonArray();
+		
+		arr.forEach(je->
+		{
+			ret.add(parseOrder(je.getAsJsonObject()));
+			
+		});
+		
+		return ret;
+		
+		
 	}
-	
-	public List<Order> listOrdersDetails(int idOrder)
+
+	public Order getOrderDetails(int idOrder)
 	{
-		return json.fromJsonList(caches.getCached(ORDERS+idOrder, new Callable<JsonElement>() {
+		
+		return  parseOrder(caches.getCached(ORDERS+idOrder, new Callable<JsonElement>() {
 			@Override
 			public JsonElement call() throws Exception {
-				return network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/"+ORDERS+"/"+idOrder).getAsJsonArray();
+				return network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/"+ORDERS+"/"+idOrder).getAsJsonObject();
 			}
-		}),Order.class);
+		}).getAsJsonObject());
 	}
+
+	
+	private Order parseOrder(JsonObject je) {
+		var o  = new Order();
+			  o.setId(je.get("id").getAsInt());
+			  o.setCode(je.get("code").getAsString());
+			  o.setTransactionCode(je.get("transaction_code").getAsString());
+			  o.setState(StateEnum.parseByLabel(je.get("state").getAsString()));
+			  o.setSize(je.get("size").getAsInt());
+			  o.setTotal(new Price(je.get("total").getAsJsonObject().get("cents").getAsInt()/100.0, je.get("total").getAsJsonObject().get("currency").getAsString()));
+		return o;
+	}
+
+
+	
 	
 }

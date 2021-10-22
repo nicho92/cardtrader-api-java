@@ -21,6 +21,7 @@ import org.api.cardtrader.modele.Expansion;
 import org.api.cardtrader.modele.Game;
 import org.api.cardtrader.modele.MarketProduct;
 import org.api.cardtrader.modele.Order;
+import org.api.cardtrader.modele.OrderItem;
 import org.api.cardtrader.modele.Price;
 import org.api.cardtrader.modele.User;
 import org.api.cardtrader.tools.CacheManager;
@@ -200,9 +201,6 @@ public class CardTraderService {
 	
 		if(obj.get("price_cents")!=null)
 			mk.setPrice(new Price(Double.valueOf((obj.get("price_cents").getAsInt()/100.0)),obj.get("price_currency").getAsString()));
-		else if(obj.get("price")!=null)
-			mk.setPrice(new Price(Double.valueOf((obj.get("price").getAsJsonObject().get("cents").getAsInt()/100.0)),obj.get("price").getAsJsonObject().get("currency").getAsString()));
-		
 		
 		if(obj.get("bundled_quantity")!=null)
 			mk.setBundledQuantity(obj.get("bundled_quantity").getAsInt());
@@ -220,25 +218,20 @@ public class CardTraderService {
 
 		mk.setGraded(obj.get("graded").getAsBoolean());
 		
-		var code ="properties_hash"; 
-		if(obj.get(code)==null)
-			code="properties";
-		
-		
-		  if(obj.get(code).getAsJsonObject().get("mtg_foil")!=null)
-			  	mk.setFoil(obj.get(code).getAsJsonObject().get("mtg_foil").getAsBoolean());
+		  if(obj.get("properties_hash").getAsJsonObject().get("mtg_foil")!=null)
+			  	mk.setFoil(obj.get("properties_hash").getAsJsonObject().get("mtg_foil").getAsBoolean());
 		  
-		  if(obj.get(code).getAsJsonObject().get("signed")!=null)
-			  	mk.setSigned(obj.get(code).getAsJsonObject().get("signed").getAsBoolean());
+		  if(obj.get("properties_hash").getAsJsonObject().get("signed")!=null)
+			  	mk.setSigned(obj.get("properties_hash").getAsJsonObject().get("signed").getAsBoolean());
 		  
-		  if(obj.get(code).getAsJsonObject().get("altered")!=null)
-			  	mk.setAltered(obj.get(code).getAsJsonObject().get("altered").getAsBoolean());
+		  if(obj.get("properties_hash").getAsJsonObject().get("altered")!=null)
+			  	mk.setAltered(obj.get("properties_hash").getAsJsonObject().get("altered").getAsBoolean());
 			  
-		  if(obj.get(code).getAsJsonObject().get("mtg_language")!=null)
-			  	mk.setLanguage(obj.get(code).getAsJsonObject().get("mtg_language").getAsString());
+		  if(obj.get("properties_hash").getAsJsonObject().get("mtg_language")!=null)
+			  	mk.setLanguage(obj.get("properties_hash").getAsJsonObject().get("mtg_language").getAsString());
 		 
-		  if(obj.get(code).getAsJsonObject().get("condition")!=null)
-			  mk.setCondition(ConditionEnum.parseByLabel(obj.get(code).getAsJsonObject().get("condition").getAsString()));
+		  if(obj.get("properties_hash").getAsJsonObject().get("condition")!=null)
+			  mk.setCondition(ConditionEnum.parseByLabel(obj.get("properties_hash").getAsJsonObject().get("condition").getAsString()));
 		  
 		  
 		  if(obj.get("user")!=null)
@@ -520,22 +513,22 @@ public class CardTraderService {
 			  o.setShippingAddress(parseAddress( je.get("order_shipping_address").getAsJsonObject()));
 			  o.setBillingAddress(parseAddress( je.get("order_billing_address").getAsJsonObject()));
 			  
-			  for(JsonElement el : je.get("order_items").getAsJsonArray())
+			  List<OrderItem> list = json.fromJsonList(je.get("order_items"), OrderItem.class);
+			  for(var item : list)
 			  {
-				  o.getOrderItems().add(parseMarket(el.getAsJsonObject()));
+				item.getPrice().setValue(item.getPrice().getValue()/100.0);
+				item.getSellerPrice().setValue(item.getSellerPrice().getValue()/100.0);
+				item.getBuyerPrice().setValue(item.getBuyerPrice().getValue()/100.0);
 			  }
+			  
+			  
+			  o.setOrderItems(list);
 			  
 			  
 			  		
 			  
 		return o;
 	}
-
-
-	private List<MarketProduct> parseItems(JsonArray asJsonArray) {
-			return json.fromJsonList(asJsonArray, MarketProduct.class);
-	}
-
 
 	private Address parseAddress(JsonObject obj) {
 		

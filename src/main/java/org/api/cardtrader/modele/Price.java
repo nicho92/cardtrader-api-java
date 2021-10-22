@@ -1,12 +1,13 @@
 package org.api.cardtrader.modele;
 
 import java.io.Serializable;
-import java.util.Currency;
+
+import com.google.gson.annotations.SerializedName;
 
 public class Price implements Serializable {
 
-	private Double value;
-	private Currency currency;
+	@SerializedName(value = "value", alternate = {"cents"})  private Double value;
+	private String currency;
 	
 	
 	public Price()
@@ -26,21 +27,26 @@ public class Price implements Serializable {
 		setCurrency(currencyCode);
 	}
 	
+	public String getCurrency() {
+		return currency;
+	}
+
+
+	public void setCurrency(String currency) {
+		this.currency = currency;
+	}
+
+
+	public void setValue(Double value) {
+		this.value = value;
+	}
+
+
 	public Double getValue() {
 		return value;
 	}
 	public void setValue(double value) {
 		this.value = value;
-	}
-	public Currency getCurrency() {
-		return currency;
-	}
-	public void setCurrency(Currency currency) {
-		this.currency = currency;
-	}
-	
-	public void setCurrency(String currencyCode) {
-		this.currency = Currency.getInstance(currencyCode);
 	}
 	
 	

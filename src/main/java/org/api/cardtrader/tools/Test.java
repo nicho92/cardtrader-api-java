@@ -18,10 +18,11 @@ public class Test {
 //			System.out.println(bp + " " + bp.getCategorie() +" " + bp.getExpansion());
 //		});
 		
-		service.listOrders(1).forEach(od->{
-				System.out.println(od.getId() + " " +  od.getBuyer()+ "  "+  od.getOrderItems());
+		service.listOrders(1).get(3).getOrderItems().forEach(mk->{
+			
+			System.out.println(mk + " " + mk.getPrice() + " " + mk.getFormattedPrice());
+			
 		});
-		
 		
 	}
  

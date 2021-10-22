@@ -32,7 +32,6 @@ public class Order implements Serializable {
 	private Date dateUpdate;
 	@SerializedName(value = "fee_percentage") private double feePercentage;
 	private String feeReason="seller";
-	private Price sellerSubtotal;
 	private int packagingNumber;
 	@SerializedName(value = "order_shipping_address") private Address shippingAddress;
 	@SerializedName(value = "order_billing_address") private Address billingAddress;
@@ -42,10 +41,11 @@ public class Order implements Serializable {
 	private Price sellerFeeAmount;
 	private Price subTotal;
 	private Price sellerSubTotal;
+	@SerializedName(value = "order_items") private List<OrderItem> orderItems;
 	
 	
-	@SerializedName(value = "order_items") private List<MarketProduct> orderItems;
-		public Order() {
+	
+	public Order() {
 		orderItems = new ArrayList<>();
 	}
 
@@ -206,12 +206,7 @@ public class Order implements Serializable {
 	public void setFeeReason(String feeReason) {
 		this.feeReason = feeReason;
 	}
-	public Price getSellerSubtotal() {
-		return sellerSubtotal;
-	}
-	public void setSellerSubtotal(Price sellerSubtotal) {
-		this.sellerSubtotal = sellerSubtotal;
-	}
+	
 	public int getPackagingNumber() {
 		return packagingNumber;
 	}
@@ -242,10 +237,10 @@ public class Order implements Serializable {
 	public void setPresale(Boolean presale) {
 		this.presale = presale;
 	}
-	public List<MarketProduct> getOrderItems() {
+	public List<OrderItem> getOrderItems() {
 		return orderItems;
 	}
-	public void setOrderItems(List<MarketProduct> orderItems) {
+	public void setOrderItems(List<OrderItem> orderItems) {
 		this.orderItems = orderItems;
 	}
 

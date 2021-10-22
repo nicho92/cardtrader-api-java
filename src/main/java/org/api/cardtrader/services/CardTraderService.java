@@ -478,8 +478,54 @@ public class CardTraderService {
 			  o.setTransactionCode(je.get("transaction_code").getAsString());
 			  o.setState(StateEnum.parseByLabel(je.get("state").getAsString()));
 			  o.setSize(je.get("size").getAsInt());
+			  o.setFeePercentage(je.get("fee_percentage").getAsDouble());
+			  o.setPackagingNumber(je.get("packing_number").getAsInt());
 			  o.setTotal(new Price(je.get("total").getAsJsonObject().get("cents").getAsInt()/100.0, je.get("total").getAsJsonObject().get("currency").getAsString()));
+			  o.setSellerTotal(new Price(je.get("seller_total").getAsJsonObject().get("cents").getAsInt()/100.0, je.get("seller_total").getAsJsonObject().get("currency").getAsString()));
+			  o.setFeeAmount(new Price(je.get("fee_amount").getAsJsonObject().get("cents").getAsInt()/100.0, je.get("fee_amount").getAsJsonObject().get("currency").getAsString()));
+			  o.setSellerFeeAmount(new Price(je.get("seller_fee_amount").getAsJsonObject().get("cents").getAsInt()/100.0, je.get("seller_fee_amount").getAsJsonObject().get("currency").getAsString()));
+			  o.setSubTotal(new Price(je.get("subtotal").getAsJsonObject().get("cents").getAsInt()/100.0, je.get("subtotal").getAsJsonObject().get("currency").getAsString()));
+			  o.setSellerSubTotal(new Price(je.get("seller_subtotal").getAsJsonObject().get("cents").getAsInt()/100.0, je.get("seller_subtotal").getAsJsonObject().get("currency").getAsString()));
+			  o.setPresale(!je.get("presale").isJsonNull() && je.get("presale").getAsBoolean());
+			  
+			  o.setDateCreation(json.toDate(je.get("created_at")));
+			  o.setDateUpdate(json.toDate(je.get("updated_at")));
+			  o.setDatePresaleEnd(json.toDate(je.get("presale_ended_at")));
+			  o.setDateCancel(json.toDate(je.get("cancelled_at")));
+			  o.setDatePaid(json.toDate(je.get("paid_at")));
+			  
+			  var jeUser = je.get("seller").getAsJsonObject();
+			  		o.setSeller(new User(jeUser.get("id").getAsInt(), jeUser.get("username").getAsString(), jeUser.get("email").getAsString(), jeUser.get("phone").getAsString()));
+			  
+			  	jeUser = je.get("buyer").getAsJsonObject();
+			  		o.setBuyer(new User(jeUser.get("id").getAsInt(), jeUser.get("username").getAsString(), jeUser.get("email").getAsString(), jeUser.get("phone").getAsString()));
+			  		
+			  	
+			  o.setShippingAddress(parseAddress( je.get("order_shipping_address").getAsJsonObject()));
+			  o.setBillingAddress(parseAddress( je.get("order_billing_address").getAsJsonObject()));
+			  		
+			  		
+			  
 		return o;
+	}
+
+
+	private Address parseAddress(JsonObject obj) {
+		
+		var add = new Address();
+			  add.setId(obj.get("id").getAsInt());
+			  add.setName(obj.get("name").getAsString());
+			  add.setStreet(obj.get("street").getAsString());
+			  add.setZip(obj.get("zip").getAsString());
+			  add.setCity(obj.get("city").getAsString());
+			  add.setStateOrProvince(obj.get("state_or_province").getAsString());
+			  add.setCountryCode(obj.get("country_code").getAsString());
+			  add.setVatNumber(obj.get("vat_number").isJsonNull()?"": obj.get("vat_number").getAsString());
+			  add.setCountry(obj.get("country").getAsString());
+			  
+			  
+		
+		return add;
 	}
 
 

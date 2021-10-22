@@ -10,7 +10,7 @@ public class ShippingMethod implements Serializable {
 	private boolean tracked;
 	private String trackedCode;
 	private int estimatedShippingDay;
-	private Money sellerPrice;
+	private Price sellerPrice;
 	
 	@Override
 	public String toString() {
@@ -48,10 +48,10 @@ public class ShippingMethod implements Serializable {
 	public void setEstimatedShippingDay(int estimatedShippingDay) {
 		this.estimatedShippingDay = estimatedShippingDay;
 	}
-	public Money getSellerPrice() {
+	public Price getSellerPrice() {
 		return sellerPrice;
 	}
-	public void setSellerPrice(Money sellerPrice) {
+	public void setSellerPrice(Price sellerPrice) {
 		this.sellerPrice = sellerPrice;
 	}
 	

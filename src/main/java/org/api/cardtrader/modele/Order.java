@@ -27,23 +27,75 @@ public class Order implements Serializable {
 	@SerializedName(value = "created_at") private Date dateCreation;
 	@SerializedName(value = "paid_at") private Date datePaid;
 	private User cancelRequester;
-	private Money sellerTotal;
+	private Price sellerTotal;
 	private Date datePresaleEnd;
+	private Date dateUpdate;
 	@SerializedName(value = "fee_percentage") private double feePercentage;
 	private String feeReason="seller";
-	private Money sellerSubtotal;
+	private Price sellerSubtotal;
 	private int packagingNumber;
 	@SerializedName(value = "order_shipping_address") private Address shippingAddress;
 	@SerializedName(value = "order_billing_address") private Address billingAddress;
 	private ShippingMethod shippingMethod;
 	private Boolean presale;
+	private Price feeAmount;
+	private Price sellerFeeAmount;
+	private Price subTotal;
+	private Price sellerSubTotal;
+	
+	
 	@SerializedName(value = "order_items") private List<MarketProduct> orderItems;
-	
-	
-	public Order() {
+		public Order() {
 		orderItems = new ArrayList<>();
 	}
-	
+
+		
+		
+		public Price getSellerSubTotal() {
+			return sellerSubTotal;
+		}
+
+
+
+		public void setSellerSubTotal(Price sellerSubTotal) {
+			this.sellerSubTotal = sellerSubTotal;
+		}
+
+
+
+		public Price getSellerFeeAmount() {
+			return sellerFeeAmount;
+		}
+
+
+
+		public Price getSubTotal() {
+			return subTotal;
+		}
+
+
+
+		public void setSubTotal(Price subTotal) {
+			this.subTotal = subTotal;
+		}
+
+
+
+		public void setSellerFeeAmount(Price sellerFeeAmount) {
+			this.sellerFeeAmount = sellerFeeAmount;
+		}
+
+
+
+		public Price getFeeAmount() {
+			return feeAmount;
+		}
+
+
+		public void setFeeAmount(Price feeAmount) {
+			this.feeAmount = feeAmount;
+		}
+
 
 	public Date getDatePaid() {
 		return datePaid;
@@ -130,10 +182,10 @@ public class Order implements Serializable {
 	public void setCancelRequester(User cancelRequester) {
 		this.cancelRequester = cancelRequester;
 	}
-	public Money getSellerTotal() {
+	public Price getSellerTotal() {
 		return sellerTotal;
 	}
-	public void setSellerTotal(Money sellerTotal) {
+	public void setSellerTotal(Price sellerTotal) {
 		this.sellerTotal = sellerTotal;
 	}
 	public Date getDatePresaleEnd() {
@@ -154,10 +206,10 @@ public class Order implements Serializable {
 	public void setFeeReason(String feeReason) {
 		this.feeReason = feeReason;
 	}
-	public Money getSellerSubtotal() {
+	public Price getSellerSubtotal() {
 		return sellerSubtotal;
 	}
-	public void setSellerSubtotal(Money sellerSubtotal) {
+	public void setSellerSubtotal(Price sellerSubtotal) {
 		this.sellerSubtotal = sellerSubtotal;
 	}
 	public int getPackagingNumber() {
@@ -205,6 +257,18 @@ public class Order implements Serializable {
 
 	public void setTotal(Price total) {
 		this.total = total;
+	}
+
+
+
+	public Date getDateUpdate() {
+		return dateUpdate;
+	}
+
+
+
+	public void setDateUpdate(Date dateUpdate) {
+		this.dateUpdate = dateUpdate;
 	}
 	
 	

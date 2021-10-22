@@ -9,14 +9,30 @@ public class User implements Serializable{
 	private String username;
 	private Integer id;
 	private String countryCode;
-	private boolean tooManyCancel;
+	private Boolean tooManyCancel;
 	private String userType;
-	private boolean canSellViaHub;
+	private Boolean canSellViaHub;
 	private String email;
 	private String phone;
 	
+
+	public User() {
+		
+	}
 	
 	
+	
+	
+	public User( Integer id,String username, String email, String phone) {
+		this.username = username;
+		this.id = id;
+		this.email = email;
+		this.phone = phone;
+	}
+
+
+
+
 	public String getPhone() {
 		return phone;
 	}
@@ -112,10 +128,6 @@ public class User implements Serializable{
 		this.id = id;
 	}
 
-	public User() {
-		
-	}
-	
 	
 	public User(String name) {
 		setUsername(name);

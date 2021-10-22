@@ -12,7 +12,7 @@ public class Product implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Integer id;
-	private Money price;
+	private Price price;
 	private int quantity;
 	private boolean bundle;
 	private String description;
@@ -86,10 +86,10 @@ public class Product implements Serializable {
 		this.id = id;
 	}
 	
-	public Money getPrice() {
+	public Price getPrice() {
 		return price;
 	}
-	public void setPrice(Money price) {
+	public void setPrice(Price price) {
 		this.price = price;
 	}
 	public int getQuantity() {

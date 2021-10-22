@@ -1,8 +1,13 @@
 package org.api.cardtrader.tools;
 
 import java.io.StringReader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import org.apache.log4j.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -11,7 +16,8 @@ import com.google.gson.JsonElement;
 
 public class JsonTools {
 
-	
+	protected Logger logger = Logger.getLogger(this.getClass());
+
 	private Gson gson;
 	
 	public JsonTools() {
@@ -41,6 +47,20 @@ public class JsonTools {
 		return gson.fromJson(new StringReader(o), JsonElement.class);
 	}
 
+	public Date toDate(JsonElement content)
+	{
+		if(content==null || content.isJsonNull())
+			return null;
+		
+		try {
+			return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(content.getAsString());
+		} catch (ParseException e) {
+			logger.error(e);
+			return null;
+		}
+		
+	}
+	
 
 
 }

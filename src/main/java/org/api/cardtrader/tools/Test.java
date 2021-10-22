@@ -18,9 +18,9 @@ public class Test {
 //			System.out.println(bp + " " + bp.getCategorie() +" " + bp.getExpansion());
 //		});
 		
-		service.listOrders(1).get(3).getOrderItems().forEach(mk->{
+		service.getOrderDetails(961806).getOrderItems().forEach(mk->{
 			
-			System.out.println(mk + " " + mk.getPrice() + " " + mk.getFormattedPrice());
+			System.out.println(mk + " " + mk.getProperties());
 			
 		});
 		

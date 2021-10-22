@@ -516,9 +516,16 @@ public class CardTraderService {
 			  List<OrderItem> list = json.fromJsonList(je.get("order_items"), OrderItem.class);
 			  for(var item : list)
 			  {
+				  
 				item.getPrice().setValue(item.getPrice().getValue()/100.0);
 				item.getSellerPrice().setValue(item.getSellerPrice().getValue()/100.0);
 				item.getBuyerPrice().setValue(item.getBuyerPrice().getValue()/100.0);
+				item.setFoil(item.getProperties().getOrDefault("mtg_foil","false").equals("true"));
+				item.setSigned(item.getProperties().getOrDefault("signed","false").equals("true"));
+				item.setAltered(item.getProperties().getOrDefault("altered","false").equals("true"));
+				item.setLang(item.getProperties().getOrDefault("mtg_language",""));
+				
+				item.setCondition(ConditionEnum.parseByLabel((item.getProperties().getOrDefault("condition","Near Mint"))));
 			  }
 			  
 			  

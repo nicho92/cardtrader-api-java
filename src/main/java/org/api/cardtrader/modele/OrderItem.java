@@ -1,6 +1,9 @@
 package org.api.cardtrader.modele;
 
 import java.io.Serializable;
+import java.util.Map;
+
+import org.api.cardtrader.enums.ConditionEnum;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -16,7 +19,12 @@ public class OrderItem implements Serializable {
 		private boolean graded;
 		private Price price;
 		private String tag;
-		
+		private String lang;
+		private boolean foil;
+		private boolean altered;
+		private boolean signed;
+		private Map<String,String> properties;
+		private ConditionEnum condition;
 		
 		@SerializedName(value = "product_id") private int productId;
 		@SerializedName(value = "blueprint_id") private int bluePrintId;
@@ -35,6 +43,66 @@ public class OrderItem implements Serializable {
 		
 		
 		
+		public ConditionEnum getCondition() {
+			return condition;
+		}
+
+
+		public void setCondition(ConditionEnum condition) {
+			this.condition = condition;
+		}
+
+
+		public Map<String, String> getProperties() {
+			return properties;
+		}
+
+
+		public void setProperties(Map<String, String> properties) {
+			this.properties = properties;
+		}
+
+
+		public String getLang() {
+			return lang;
+		}
+
+
+		public void setLang(String lang) {
+			this.lang = lang;
+		}
+
+
+		public boolean isFoil() {
+			return foil;
+		}
+
+
+		public void setFoil(boolean foil) {
+			this.foil = foil;
+		}
+
+
+		public boolean isAltered() {
+			return altered;
+		}
+
+
+		public void setAltered(boolean altered) {
+			this.altered = altered;
+		}
+
+
+		public boolean isSigned() {
+			return signed;
+		}
+
+
+		public void setSigned(boolean signed) {
+			this.signed = signed;
+		}
+
+
 		public Price getBuyerPrice() {
 			return buyerPrice;
 		}

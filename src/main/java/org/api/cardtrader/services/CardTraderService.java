@@ -27,6 +27,7 @@ import org.api.cardtrader.tools.CacheManager;
 import org.api.cardtrader.tools.JsonTools;
 import org.api.cardtrader.tools.URLUtilities;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -192,33 +193,52 @@ public class CardTraderService {
 		if(obj.get("game_id")!=null)
 			mk.setGame(getGameById(obj.get("game_id").getAsInt()));
 		
-		if(obj.get("expansion")!=null)
+		if(obj.get("expansion")!=null && obj.get("expansion").isJsonObject())
 			mk.setExpansion(getExpansionByCode(obj.get("expansion").getAsJsonObject().get("code").getAsString()));
 		
 		mk.setQty(obj.get("quantity").getAsInt());
-		mk.setPrice(new Price(Double.valueOf((obj.get("price_cents").getAsInt()/100.0)),obj.get("price_currency").getAsString()));
-		mk.setBundledQuantity(obj.get("bundled_quantity").getAsInt());
+	
+		if(obj.get("price_cents")!=null)
+			mk.setPrice(new Price(Double.valueOf((obj.get("price_cents").getAsInt()/100.0)),obj.get("price_currency").getAsString()));
+		else if(obj.get("price")!=null)
+			mk.setPrice(new Price(Double.valueOf((obj.get("price").getAsJsonObject().get("cents").getAsInt()/100.0)),obj.get("price").getAsJsonObject().get("currency").getAsString()));
+		
+		
+		if(obj.get("bundled_quantity")!=null)
+			mk.setBundledQuantity(obj.get("bundled_quantity").getAsInt());
+		
+		if(obj.get("name_en")!=null)
+			mk.setName(obj.get("name_en").getAsString());
+		
+		if(obj.get("name")!=null)
+			mk.setName(obj.get("name").getAsString());
+		
+		
 		mk.setIdBlueprint(obj.get("blueprint_id").getAsInt());
 		mk.setBundle(obj.get("bundle").getAsBoolean());
 		mk.setId(obj.get("id").getAsInt());			
-		mk.setName(obj.get("name_en").getAsString());
+
 		mk.setGraded(obj.get("graded").getAsBoolean());
 		
+		var code ="properties_hash"; 
+		if(obj.get(code)==null)
+			code="properties";
 		
-		  if(obj.get("properties_hash").getAsJsonObject().get("mtg_foil")!=null)
-			  	mk.setFoil(obj.get("properties_hash").getAsJsonObject().get("mtg_foil").getAsBoolean());
+		
+		  if(obj.get(code).getAsJsonObject().get("mtg_foil")!=null)
+			  	mk.setFoil(obj.get(code).getAsJsonObject().get("mtg_foil").getAsBoolean());
 		  
-		  if(obj.get("properties_hash").getAsJsonObject().get("signed")!=null)
-			  	mk.setSigned(obj.get("properties_hash").getAsJsonObject().get("signed").getAsBoolean());
+		  if(obj.get(code).getAsJsonObject().get("signed")!=null)
+			  	mk.setSigned(obj.get(code).getAsJsonObject().get("signed").getAsBoolean());
 		  
-		  if(obj.get("properties_hash").getAsJsonObject().get("altered")!=null)
-			  	mk.setAltered(obj.get("properties_hash").getAsJsonObject().get("altered").getAsBoolean());
+		  if(obj.get(code).getAsJsonObject().get("altered")!=null)
+			  	mk.setAltered(obj.get(code).getAsJsonObject().get("altered").getAsBoolean());
 			  
-		  if(obj.get("properties_hash").getAsJsonObject().get("mtg_language")!=null)
-			  	mk.setLanguage(obj.get("properties_hash").getAsJsonObject().get("mtg_language").getAsString());
+		  if(obj.get(code).getAsJsonObject().get("mtg_language")!=null)
+			  	mk.setLanguage(obj.get(code).getAsJsonObject().get("mtg_language").getAsString());
 		 
-		  if(obj.get("properties_hash").getAsJsonObject().get("condition")!=null)
-			  mk.setCondition(ConditionEnum.parseByLabel(obj.get("properties_hash").getAsJsonObject().get("condition").getAsString()));
+		  if(obj.get(code).getAsJsonObject().get("condition")!=null)
+			  mk.setCondition(ConditionEnum.parseByLabel(obj.get(code).getAsJsonObject().get("condition").getAsString()));
 		  
 		  
 		  if(obj.get("user")!=null)
@@ -448,11 +468,7 @@ public class CardTraderService {
 			}
 		}).getAsJsonArray();
 		
-		arr.forEach(je->
-		{
-			ret.add(parseOrder(je.getAsJsonObject()));
-			
-		});
+		arr.forEach(je->ret.add(parseOrder(je.getAsJsonObject())));
 		
 		return ret;
 		
@@ -503,10 +519,21 @@ public class CardTraderService {
 			  	
 			  o.setShippingAddress(parseAddress( je.get("order_shipping_address").getAsJsonObject()));
 			  o.setBillingAddress(parseAddress( je.get("order_billing_address").getAsJsonObject()));
-			  		
+			  
+			  for(JsonElement el : je.get("order_items").getAsJsonArray())
+			  {
+				  o.getOrderItems().add(parseMarket(el.getAsJsonObject()));
+			  }
+			  
+			  
 			  		
 			  
 		return o;
+	}
+
+
+	private List<MarketProduct> parseItems(JsonArray asJsonArray) {
+			return json.fromJsonList(asJsonArray, MarketProduct.class);
 	}
 
 

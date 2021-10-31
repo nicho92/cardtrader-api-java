@@ -28,7 +28,6 @@ import org.api.cardtrader.tools.CacheManager;
 import org.api.cardtrader.tools.JsonTools;
 import org.api.cardtrader.tools.URLUtilities;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 

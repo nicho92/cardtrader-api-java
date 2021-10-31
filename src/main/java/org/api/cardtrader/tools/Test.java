@@ -13,16 +13,15 @@ public class Test {
 		var token = FileUtils.readFileToString(new File("c:/key.txt"), Charset.defaultCharset());
 		
 		var service = new CardTraderService(token);
+		var set = service.getExpansionByCode("M21");
+		var bps = service.listBluePrints(service.getCategoryById(1), "Fiery Emancipation",set).get(0);
 		
-//		service.listMarketProduct(1).forEach(bp->{
+		System.out.println(bps.getId());
+		
+		
+//		service.listMarketProduct(bps).forEach(bp->{
 //			System.out.println(bp + " " + bp.getCategorie() +" " + bp.getExpansion());
 //		});
-		
-		service.getOrderDetails(961806).getOrderItems().forEach(mk->{
-			
-			System.out.println(mk + " " + mk.getProperties());
-			
-		});
 		
 	}
  

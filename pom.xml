@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.nicho92</groupId>
 	<artifactId>cardtrader-api-java</artifactId>
-	<version>0.0.17</version>
+	<version>0.0.19</version>
 	<packaging>jar</packaging>
 	<name>cardtrader-api-java</name>
 	<description>Java implementation for MTGStock API</description>
@@ -80,9 +80,10 @@
 	</dependencies>
 	<build>
 		<plugins>
-			<plugin>
+		    <plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.2.0</version>
 				<configuration>
 					<!-- exclude log4j.properties -->
 					<excludes>

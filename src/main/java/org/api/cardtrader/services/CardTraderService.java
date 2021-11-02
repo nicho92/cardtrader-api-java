@@ -57,6 +57,10 @@ public class CardTraderService {
 		caches = new CacheManager<>();
 	}
 	
+	public void enableCaching(boolean enable)
+	{
+		caches.setEnable(enable);
+	}
 
 	public String getToken() {
 		return token;

@@ -11,7 +11,13 @@ import com.google.common.cache.CacheBuilder;
 public class CacheManager<T> {
 		protected Logger logger = LogManager.getLogger(this.getClass());
 		private Cache<String, T> guava;
+		private boolean enable=true;
 		
+		
+		public void setEnable(boolean enable)
+		{
+			this.enable=enable;
+		}
 		
 		public CacheManager() {
 			guava = CacheBuilder.newBuilder().build();
@@ -39,14 +45,24 @@ public class CacheManager<T> {
 		
 		public T getCached(String k, Callable<T> call)
 		{
-			if(getItem(k)==null)
+			
+			if(!enable)
+				try {
+					return call.call();
+				} catch (Exception e1) {
+					logger.error("error calling",e1);
+					return null;
+				}
+			
+			if(getItem(k)==null) 
+			{
 				try {
 					put(call.call(),k);
 				} catch (Exception e) {
 					logger.error("error getting " + k,e);
 					return null;
 				}
-			
+			}
 			
 			return getItem(k);
 		}

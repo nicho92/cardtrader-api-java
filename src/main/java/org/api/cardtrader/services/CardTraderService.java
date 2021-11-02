@@ -39,6 +39,7 @@ public class CardTraderService {
 	private static final String EXPANSIONS = "expansions";
 	private static final String CATEGORIES = "categories";
 	private static final String GAMES = "games";
+	private static final String MARKETPLACE_BLUEPRINTS = "marketplace/blueprints";
 	
 	private JsonTools json;
 	private URLUtilities network; 
@@ -139,7 +140,7 @@ public class CardTraderService {
 	
 	
 	public List<MarketProduct> listMarketProduct(Expansion exp){
-		return listMarketProduct(exp.getId()); 
+		return listMarketProductByBluePrint(exp.getId()); 
 	}
 	
 	
@@ -251,13 +252,37 @@ public class CardTraderService {
 	}
 	
 	
-	public List<MarketProduct> listMarketProduct(BluePrint bp)
+	public List<MarketProduct> listMarketProductByBluePrint(BluePrint bp)
 	{
-		return listMarketProduct(bp.getExpansion().getId());
+		return listMarketProductByBluePrint(bp.getExpansion().getId());
+	}
+
+	
+	public List<MarketProduct> listMarketProductByBluePrint(Integer idBlueprint) {
+		var ret = new ArrayList<MarketProduct>();
+		var arr= caches.getCached(MARKETPLACE_BLUEPRINTS+idBlueprint, new Callable<JsonElement>() {
+			@Override
+			public JsonElement call() throws Exception {
+				return network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/"+MARKETPLACE_PRODUCTS+"?blueprint_id="+idBlueprint);
+			}
+		}).getAsJsonObject();
+		
+		arr.entrySet().forEach(id->{
+			id.getValue().getAsJsonArray().forEach(obj->{
+				var mk = parseMarket(obj.getAsJsonObject());
+				ret.add(mk);
+			});
+		});
+		return ret;
 	}
 
 
-	public List<MarketProduct> listMarketProduct(Integer expansionid)
+	public List<MarketProduct> listMarketProductByExpansion(Expansion expansion)
+	{
+		return listMarketProductByExpansion(expansion.getId());
+	}
+
+	public List<MarketProduct> listMarketProductByExpansion(Integer expansionid)
 	{
 		var ret = new ArrayList<MarketProduct>();
 		

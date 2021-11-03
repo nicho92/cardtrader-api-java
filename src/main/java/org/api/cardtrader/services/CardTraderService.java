@@ -216,11 +216,16 @@ public class CardTraderService {
 			mk.setName(obj.get("name").getAsString());
 		
 		
+		
+		if(obj.get("bundle")!=null)
+			mk.setBundle(obj.get("bundle").getAsBoolean());
+		
 		mk.setIdBlueprint(obj.get("blueprint_id").getAsInt());
-		mk.setBundle(obj.get("bundle").getAsBoolean());
+		
 		mk.setId(obj.get("id").getAsInt());			
 
-		mk.setGraded(obj.get("graded").getAsBoolean());
+		  if(obj.get("graded")!=null)
+				mk.setGraded(obj.get("graded").getAsBoolean());
 		
 		  if(obj.get("properties_hash").getAsJsonObject().get("mtg_foil")!=null)
 			  	mk.setFoil(obj.get("properties_hash").getAsJsonObject().get("mtg_foil").getAsBoolean());

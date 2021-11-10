@@ -16,10 +16,8 @@ public class Test {
 		var set = service.getExpansionByCode("M21");
 		var bps = service.listBluePrints(service.getCategoryById(1), "Fiery Emancipation",set).get(0);
 		
-		System.out.println(bps.getProductUrl());
-		
 		service.listMarketProductByBluePrint(bps).forEach(bp->{
-			System.out.println(bp + " " + bp.getCategorie() +" " + bp.getExpansion());
+			System.out.println(bp + " " + bp.getCategorie() +" " + bp.getExpansion() +" " + bp.getPrice() +" " + bp.getSeller() + " " + bp.getSeller().getCountryCode());
 		});
 		
 	}

@@ -13,7 +13,7 @@ public class Categorie implements Serializable{
 	private String name;
 	private Game game;
 	@SerializedName(value="game_id") int gameId;
-		private ConditionEnum condition;
+	private ConditionEnum condition;
 	
 	public Categorie() {
 	}
@@ -57,7 +57,7 @@ public class Categorie implements Serializable{
 
 	@Override
 	public String toString() {
-		return getName() + " " + getGame();
+		return getName();
 	}
 	
 }

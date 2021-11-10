@@ -92,7 +92,7 @@ public class CardTraderService {
 		List<Expansion> ret = json.fromJsonList(caches.getCached(EXPANSIONS, new Callable<JsonElement>() {
 			@Override
 			public JsonElement call() throws Exception {
-				return network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/"+EXPANSIONS).getAsJsonArray();
+				return network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/"+EXPANSIONS+"?format=json").getAsJsonArray();
 			}
 		}),Expansion.class);
 		ret.forEach(ex->ex.setGame(getGameById(ex.getGameId())));
@@ -104,7 +104,7 @@ public class CardTraderService {
 			return json.fromJsonList(caches.getCached(GAMES, new Callable<JsonElement>() {
 				@Override
 				public JsonElement call() throws Exception {
-					return network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/"+GAMES).getAsJsonArray();
+					return network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/"+GAMES+"?format=json").getAsJsonObject().get("array").getAsJsonArray();
 				}
 			}),Game.class);
 	}
@@ -114,7 +114,7 @@ public class CardTraderService {
 		List<Categorie> ret= json.fromJsonList(caches.getCached(CATEGORIES, new Callable<JsonElement>() {
 			@Override
 			public JsonElement call() throws Exception {
-				return network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/"+CATEGORIES).getAsJsonArray();
+				return network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/"+CATEGORIES+"?format=json").getAsJsonArray();
 			}
 		}),Categorie.class);
 		
@@ -144,7 +144,7 @@ public class CardTraderService {
 	
 	
 	public List<MarketProduct> listMarketProduct(Expansion exp){
-		return listMarketProductByBluePrint(exp.getId()); 
+		return listMarketProductByExpansion(exp.getId()); 
 	}
 	
 	
@@ -263,11 +263,11 @@ public class CardTraderService {
 	
 	public List<MarketProduct> listMarketProductByBluePrint(BluePrint bp)
 	{
-		return listMarketProductByBluePrint(bp.getExpansion().getId());
+		return listMarketProductByBluePrint(bp.getExpansion().getId(),bp.getCategorie());
 	}
 
 	
-	public List<MarketProduct> listMarketProductByBluePrint(Integer idBlueprint) {
+	private List<MarketProduct> listMarketProductByBluePrint(Integer idBlueprint, Categorie ct) {
 		var ret = new ArrayList<MarketProduct>();
 		var arr= caches.getCached(MARKETPLACE_BLUEPRINTS+idBlueprint, new Callable<JsonElement>() {
 			@Override
@@ -279,6 +279,7 @@ public class CardTraderService {
 		arr.entrySet().forEach(id->{
 			id.getValue().getAsJsonArray().forEach(obj->{
 				var mk = parseMarket(obj.getAsJsonObject());
+				mk.setCategorie(ct);
 				ret.add(mk);
 			});
 		});
@@ -369,19 +370,25 @@ public class CardTraderService {
 	     	  
 	     	  
 	     	  b.setSlug(obj.get("slug").getAsString());
-	     	  b.setMkmId(obj.get("mkm_id").getAsInt());
-	     	  b.setScryfallId(obj.get("scryfall_id").getAsString());
+	     	  
+	     	  if(obj.get("mkm_id")!=null)
+	     		  b.setMkmId(obj.get("mkm_id").getAsInt());
+	     	  
+	     	  if(obj.get("scryfall_id")!=null)
+	     		  b.setScryfallId(obj.get("scryfall_id").getAsString());
+	     	  
+	     	  
 	 		  b.setGame(getGameById(obj.get("game_id").getAsInt()));
 			  b.setCategorie(getCategoryById(obj.get("category_id").getAsInt()));
 			  b.setExpansion(getExpansionById(obj.get("expansion_id").getAsInt()));
 			  b.setProductUrl(CardTraderConstants.CARDTRADER_WEBSITE_URI+"cards/"+b.getSlug()+"?share_code="+CardTraderConstants.SHARE_CODE);
 			  
-			  if(obj.get("fixed_properties").getAsJsonObject().get("collector_number")!=null)
+			  if(obj.get("fixed_properties")!=null && obj.get("fixed_properties").getAsJsonObject().get("collector_number")!=null)
 				  b.setCollectorNumber(obj.get("fixed_properties").getAsJsonObject().get("collector_number").getAsString());
 			  
-			  if(obj.get("image_url")!=null && !obj.get("image_url").getAsString().isBlank())
+			  if(obj.get("image")!=null)
 			  {
-				  b.setImageUrl(CardTraderConstants.CARDTRADER_WEBSITE_URI+obj.get("image_url").getAsString());
+				  b.setImageUrl(CardTraderConstants.CARDTRADER_WEBSITE_URI+obj.get("image").getAsJsonObject().get("url").getAsString());
 			  }
 			  else
 			  {

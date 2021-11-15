@@ -497,7 +497,7 @@ public class CardTraderService {
 		var arr = caches.getCached(ORDERS+pageMin, new Callable<JsonElement>() {
 			@Override
 			public JsonElement call() throws Exception {
-				return network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/"+ORDERS+"?limit=100&page="+pageMin).getAsJsonArray();
+				return network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/"+ORDERS+"?format=json&limit=100&page="+pageMin).getAsJsonArray();
 			}
 		}).getAsJsonArray();
 		
@@ -514,7 +514,7 @@ public class CardTraderService {
 		return  parseOrder(caches.getCached(ORDERS+idOrder, new Callable<JsonElement>() {
 			@Override
 			public JsonElement call() throws Exception {
-				return network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/"+ORDERS+"/"+idOrder).getAsJsonObject();
+				return network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/"+ORDERS+"/"+idOrder+"?format=json").getAsJsonObject();
 			}
 		}).getAsJsonObject());
 	}

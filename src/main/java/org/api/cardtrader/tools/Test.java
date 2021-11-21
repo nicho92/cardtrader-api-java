@@ -13,17 +13,15 @@ public class Test {
 		var token = FileUtils.readFileToString(new File("c:/key.txt"), Charset.defaultCharset());
 		
 		var service = new CardTraderService(token);
-//		var set = service.getExpansionByCode("M21");
-//		var bps = service.listBluePrints(service.getCategoryById(1), "Fiery Emancipation",set).get(0);
-//		
-//		service.listMarketProductByBluePrint(bps).forEach(bp->{
-//			System.out.println(bp + " " + bp.getCategorie() +" " + bp.getExpansion() +" " + bp.getPrice() +" " + bp.getSeller() + " " + bp.getSeller().getCountryCode());
-//		});
+		var set = service.getExpansionByCode("A25");
 		
-		service.listOrders(1).forEach(order->{
-			System.out.println(order);
-			
-			
+		
+		var bpS = service.listBluePrints(null, "Chalice of the Void",set).get(0);
+		System.out.println(bpS.getCategorie() + " " + bpS.getName() + " " + bpS.getExpansion() +" " + bpS.getId());
+		
+		
+		service.listMarketProductByBluePrint(bpS).forEach(bp->{
+			System.out.println(bp + " " + bp.getCategorie() +" " + bp.getExpansion() +" " + bp.getPrice() +" " + bp.getSeller() + " " + bp.getSeller().getCountryCode());
 		});
 		
 		

@@ -263,7 +263,7 @@ public class CardTraderService {
 	
 	public List<MarketProduct> listMarketProductByBluePrint(BluePrint bp)
 	{
-		return listMarketProductByBluePrint(bp.getExpansion().getId(),bp.getCategorie());
+		return listMarketProductByBluePrint(bp.getId(),bp.getCategorie());
 	}
 
 	

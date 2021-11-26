@@ -3,6 +3,7 @@ package org.api.cardtrader.tools;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,6 +25,7 @@ import org.apache.http.util.EntityUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.api.cardtrader.services.CardTraderConstants;
+import org.api.cardtrader.services.URLCallListener;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -37,7 +39,8 @@ public class URLUtilities {
 	protected Logger logger = LogManager.getLogger(this.getClass());
 	private String bearer;
 	private JsonTools json;
-	
+	private URLCallListener listener;
+	  
 	
 	public URLUtilities() {
 		json = new JsonTools();
@@ -63,6 +66,25 @@ public class URLUtilities {
 	
 	public HttpResponse execute(HttpRequestBase req) throws IOException
 	{
+		var callInfo = new URLCallInfo();
+		Instant start = Instant.now();
+		var resp = execute(req);
+		Instant stop = Instant.now();
+		long duration = stop.toEpochMilli()-start.toEpochMilli();	
+	
+		callInfo.setResponse(resp);
+		callInfo.setStart(start);
+		callInfo.setEnd(stop);
+		callInfo.setDuration(duration);
+		callInfo.setUrl(req.getURI().toASCIIString());
+		callInfo.setRequest(req);
+		
+		if(listener!=null)
+			listener.notify(callInfo);
+		
+		
+		
+		
 		return httpclient.execute(req,httpContext);
 	}
 	
@@ -166,6 +188,11 @@ public class URLUtilities {
 		reader.close();
 		return e;
 		
+		
+	}
+
+	public void setCallListener(URLCallListener listener2) {
+		this.listener=listener2;
 		
 	}
 

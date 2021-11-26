@@ -68,7 +68,7 @@ public class URLUtilities {
 	{
 		var callInfo = new URLCallInfo();
 		Instant start = Instant.now();
-		var resp = execute(req);
+		var resp = httpclient.execute(req,httpContext);
 		Instant stop = Instant.now();
 		long duration = stop.toEpochMilli()-start.toEpochMilli();	
 	
@@ -85,7 +85,7 @@ public class URLUtilities {
 		
 		
 		
-		return httpclient.execute(req,httpContext);
+		return resp;
 	}
 	
 	public HttpResponse doGet(String url) throws IOException

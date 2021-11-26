@@ -57,6 +57,7 @@ public class CardTraderService {
 		caches = new CacheManager<>();
 	}
 	
+	
 	public void enableCaching(boolean enable)
 	{
 		caches.setEnable(enable);
@@ -593,6 +594,12 @@ public class CardTraderService {
 			  
 		
 		return add;
+	}
+
+
+	public void setListener(URLCallListener urlCallListener) {
+		network.setCallListener(urlCallListener);
+		
 	}
 
 

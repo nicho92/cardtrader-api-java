@@ -367,7 +367,7 @@ public class CardTraderService {
 	     	  b.setName(obj.get("name").getAsString());
 	     	 
 	     	  if(!obj.get("version").isJsonNull() && !obj.get("version").getAsString().isBlank())
-	     		  b.setVersion(VersionEnum.valueOf(obj.get("version").getAsString().toUpperCase().replace("-", "_")));
+	     		  b.setVersion(VersionEnum.valueOf(obj.get("version").getAsString().toUpperCase().replace("-", "_").replace(" ", "_")));
 	     	  
 	     	  
 	     	  b.setSlug(obj.get("slug").getAsString());

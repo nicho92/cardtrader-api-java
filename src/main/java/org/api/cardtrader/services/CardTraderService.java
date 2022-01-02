@@ -314,8 +314,8 @@ public class CardTraderService {
 	}
 	
 
-	public List<BluePrint> listBluePrints(String string) {
-		return listBluePrints(null, string, null);
+	public List<BluePrint> listBluePrints(String name) {
+		return listBluePrints(null, name, null);
 		
 	}
 	
@@ -362,13 +362,20 @@ public class CardTraderService {
 		List<BluePrint> ret = new ArrayList<>();
 		arr.forEach(a->{
 			  var obj = a.getAsJsonObject();
+			  
+			 
 			  var b = new BluePrint();
 	     	  b.setId(obj.get("id").getAsInt());
 	     	  b.setName(obj.get("name").getAsString());
-	     	 
-	     	  if(!obj.get("version").isJsonNull() && !obj.get("version").getAsString().isBlank())
-	     		  b.setVersion(VersionEnum.valueOf(obj.get("version").getAsString().toUpperCase().replace("-", "_").replace(" ", "_")));
 	     	  
+	     	  try {
+		     	  if(!obj.get("version").isJsonNull() && !obj.get("version").getAsString().isBlank())
+		     		  b.setVersion(VersionEnum.valueOf(obj.get("version").getAsString().toUpperCase().replace("-", "_").replace(" ", "_")));
+	     	  }
+	     	  catch(IllegalArgumentException ex)
+	     	  {
+	     		  logger.warn(ex.getMessage());
+	     	  }
 	     	  
 	     	  b.setSlug(obj.get("slug").getAsString());
 	     	  

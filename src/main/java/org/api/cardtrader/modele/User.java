@@ -20,6 +20,11 @@ public class User implements Serializable{
 		
 	}
 	
+
+	public User(Integer id, String name) {
+		setUsername(name);
+		setId(id);
+	}
 	
 	
 	
@@ -29,9 +34,6 @@ public class User implements Serializable{
 		this.email = email;
 		this.phone = phone;
 	}
-
-
-
 
 	public String getPhone() {
 		return phone;
@@ -134,11 +136,6 @@ public class User implements Serializable{
 	}
 	
 
-	public User(Integer id, String name) {
-		setUsername(name);
-		setId(id);
-	}
-	
 	@Override
 	public String toString() {
 		return getUsername();

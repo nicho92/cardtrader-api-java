@@ -17,7 +17,7 @@ public class OrderItem implements Serializable {
 		private boolean bundle;
 		private String description;
 		private boolean graded;
-		private Price price;
+		@SerializedName(value = "seller_price") private Price price;
 		private String tag;
 		private String lang;
 		private boolean foil;
@@ -36,7 +36,6 @@ public class OrderItem implements Serializable {
 		@SerializedName(value = "scryfall_id") private String scryfallId;
 		@SerializedName(value = "user_data_field") private String userDataField;
 		@SerializedName(value = "buyer_price") private Price buyerPrice; 
-		@SerializedName(value = "seller_price") private Price sellerPrice; 
 		
 		
 		
@@ -111,17 +110,6 @@ public class OrderItem implements Serializable {
 		public void setBuyerPrice(Price buyerPrice) {
 			this.buyerPrice = buyerPrice;
 		}
-
-
-		public Price getSellerPrice() {
-			return sellerPrice;
-		}
-
-
-		public void setSellerPrice(Price sellerPrice) {
-			this.sellerPrice = sellerPrice;
-		}
-
 
 		@Override
 		public String toString() {

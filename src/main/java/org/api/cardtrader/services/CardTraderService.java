@@ -523,18 +523,22 @@ public class CardTraderService {
 	
 	private Order parseOrder(JsonObject je) {
 		var o  = new Order();
+			
 			  o.setId(je.get("id").getAsInt());
 			  o.setCode(je.get("code").getAsString());
 			  o.setTransactionCode(je.get("transaction_code").getAsString());
 			  o.setState(StateEnum.parseByLabel(je.get("state").getAsString()));
 			  o.setSize(je.get("size").getAsInt());
-			  o.setFeePercentage(je.get("fee_percentage").getAsDouble());
+			  
+//			  if(je.get("fee_percentage")!=null)
+//				  o.setFeePercentage(je.get("fee_percentage").getAsDouble());
+			  
 			  o.setPackagingNumber(je.get("packing_number").getAsInt());
-			  o.setTotal(new Price(je.get("total").getAsJsonObject().get("cents").getAsInt()/100.0, je.get("total").getAsJsonObject().get("currency").getAsString()));
+//			  o.setTotal(new Price(je.get("total").getAsJsonObject().get("cents").getAsInt()/100.0, je.get("total").getAsJsonObject().get("currency").getAsString()));
 			  o.setSellerTotal(new Price(je.get("seller_total").getAsJsonObject().get("cents").getAsInt()/100.0, je.get("seller_total").getAsJsonObject().get("currency").getAsString()));
-			  o.setFeeAmount(new Price(je.get("fee_amount").getAsJsonObject().get("cents").getAsInt()/100.0, je.get("fee_amount").getAsJsonObject().get("currency").getAsString()));
+//			  o.setFeeAmount(new Price(je.get("fee_amount").getAsJsonObject().get("cents").getAsInt()/100.0, je.get("fee_amount").getAsJsonObject().get("currency").getAsString()));
 			  o.setSellerFeeAmount(new Price(je.get("seller_fee_amount").getAsJsonObject().get("cents").getAsInt()/100.0, je.get("seller_fee_amount").getAsJsonObject().get("currency").getAsString()));
-			  o.setSubTotal(new Price(je.get("subtotal").getAsJsonObject().get("cents").getAsInt()/100.0, je.get("subtotal").getAsJsonObject().get("currency").getAsString()));
+//			  o.setSubTotal(new Price(je.get("subtotal").getAsJsonObject().get("cents").getAsInt()/100.0, je.get("subtotal").getAsJsonObject().get("currency").getAsString()));
 			  o.setSellerSubTotal(new Price(je.get("seller_subtotal").getAsJsonObject().get("cents").getAsInt()/100.0, je.get("seller_subtotal").getAsJsonObject().get("currency").getAsString()));
 			  o.setPresale(!je.get("presale").isJsonNull() && je.get("presale").getAsBoolean());
 			  
@@ -545,7 +549,8 @@ public class CardTraderService {
 			  o.setDatePaid(json.toDate(je.get("paid_at")));
 			  
 			  var jeUser = je.get("seller").getAsJsonObject();
-			  		o.setSeller(new User(jeUser.get("id").getAsInt(), jeUser.get("username").getAsString(), jeUser.get("email").getAsString(), jeUser.get("phone").getAsString()));
+				o.setSeller(new User(jeUser.get("id").getAsInt(), jeUser.get("username").getAsString()));
+			  	//	o.setSeller(new User(jeUser.get("id").getAsInt(), jeUser.get("username").getAsString(), jeUser.get("email").getAsString(), jeUser.get("phone").getAsString()));
 			  
 			  	jeUser = je.get("buyer").getAsJsonObject();
 			  		o.setBuyer(new User(jeUser.get("id").getAsInt(), jeUser.get("username").getAsString(), jeUser.get("email").getAsString(), jeUser.get("phone").getAsString()));
@@ -559,8 +564,8 @@ public class CardTraderService {
 			  {
 				  
 				item.getPrice().setValue(item.getPrice().getValue()/100.0);
-				item.getSellerPrice().setValue(item.getSellerPrice().getValue()/100.0);
-				item.getBuyerPrice().setValue(item.getBuyerPrice().getValue()/100.0);
+			//	item.getSellerPrice().setValue(item.getSellerPrice().getValue()/100.0);
+			//	item.getBuyerPrice().setValue(item.getBuyerPrice().getValue()/100.0);
 				item.setFoil(item.getProperties().getOrDefault("mtg_foil","false").equals("true"));
 				item.setSigned(item.getProperties().getOrDefault("signed","false").equals("true"));
 				item.setAltered(item.getProperties().getOrDefault("altered","false").equals("true"));

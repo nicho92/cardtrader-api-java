@@ -13,17 +13,24 @@ public class Test {
 		var token = FileUtils.readFileToString(new File("c:/key.txt"), Charset.defaultCharset());
 		
 		var service = new CardTraderService(token);
-		var set = service.getExpansionByCode("A25");
 		
-		
-		var bpS = service.listBluePrints(null, "Chalice of the Void",set).get(0);
-		System.out.println(bpS.getCategorie() + " " + bpS.getName() + " " + bpS.getExpansion() +" " + bpS.getId());
-		
-		
-		service.listMarketProductByBluePrint(bpS).forEach(bp->{
-			System.out.println(bp + " " + bp.getCategorie() +" " + bp.getExpansion() +" " + bp.getPrice() +" " + bp.getSeller() + " " + bp.getSeller().getCountryCode());
+		service.listOrders(1).forEach(o->{
+			
+			System.out.println(o);
+			
 		});
 		
+//		var set = service.getExpansionByCode("A25");
+//		
+//		
+//		var bpS = service.listBluePrints(null, "Chalice of the Void",set).get(0);
+//		System.out.println(bpS.getCategorie() + " " + bpS.getName() + " " + bpS.getExpansion() +" " + bpS.getId());
+//		
+//		
+//		service.listMarketProductByBluePrint(bpS).forEach(bp->{
+//			System.out.println(bp + " " + bp.getCategorie() +" " + bp.getExpansion() +" " + bp.getPrice() +" " + bp.getSeller() + " " + bp.getSeller().getCountryCode());
+//		});
+//		
 		
 		
 	}

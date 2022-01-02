@@ -13,13 +13,7 @@ public class Test {
 		var token = FileUtils.readFileToString(new File("c:/key.txt"), Charset.defaultCharset());
 		
 		var service = new CardTraderService(token);
-		
-		service.listOrders(1).forEach(o->{
-			
-			System.out.println(o);
-			
-		});
-		
+
 //		var set = service.getExpansionByCode("A25");
 //		
 //		
@@ -32,6 +26,18 @@ public class Test {
 //		});
 //		
 		
+		service.listStock().forEach(mp->{
+			
+			
+			var listBp = service.listBluePrints(mp.getCategorie(), null, mp.getExpansion());
+			
+			listBp.forEach(bp->{
+				System.out.println(bp.getName() + " " + bp.getExpansion()+ " " + bp.getId() + " " + mp.getIdBlueprint());
+			});
+			
+			
+			
+		});
 		
 	}
  

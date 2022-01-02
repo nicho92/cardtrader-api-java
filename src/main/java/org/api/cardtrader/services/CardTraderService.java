@@ -176,6 +176,7 @@ public class CardTraderService {
 		try {
 			network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/products/export").getAsJsonArray().forEach(je->{
 				var obj = je.getAsJsonObject();
+			
 				ret.add(parseMarket(obj));
 			});
 		} catch (IOException e) {

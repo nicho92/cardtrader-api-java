@@ -191,6 +191,9 @@ public class CardTraderService {
 	private MarketProduct parseMarket(JsonObject obj) {
 		var mk  = new MarketProduct();
 		
+		mk.setIdBlueprint(obj.get("blueprint_id").getAsInt());
+		mk.setId(obj.get("id").getAsInt());			
+
 		if(!obj.get("description").isJsonNull())
 		 mk.setDescription(obj.get("description").getAsString());
 		
@@ -201,7 +204,13 @@ public class CardTraderService {
 			mk.setGame(getGameById(obj.get("game_id").getAsInt()));
 		
 		if(obj.get("expansion")!=null && obj.get("expansion").isJsonObject())
+		{
 			mk.setExpansion(getExpansionByCode(obj.get("expansion").getAsJsonObject().get("code").getAsString()));
+		}
+		else
+		{
+			mk.setExpansion(listMarketProductByBluePrint(mk.getIdBlueprint(),mk.getCategorie()).get(0).getExpansion());
+		}
 		
 		mk.setQty(obj.get("quantity").getAsInt());
 	
@@ -222,10 +231,7 @@ public class CardTraderService {
 		if(obj.get("bundle")!=null)
 			mk.setBundle(obj.get("bundle").getAsBoolean());
 		
-		mk.setIdBlueprint(obj.get("blueprint_id").getAsInt());
-		
-		mk.setId(obj.get("id").getAsInt());			
-
+	
 		  if(obj.get("graded")!=null)
 				mk.setGraded(obj.get("graded").getAsBoolean());
 		

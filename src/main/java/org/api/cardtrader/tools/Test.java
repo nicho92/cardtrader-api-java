@@ -28,13 +28,7 @@ public class Test {
 		
 		service.listStock().forEach(mp->{
 			
-			
-			var listBp = service.listBluePrints(mp.getCategorie(), null, mp.getExpansion());
-			
-			listBp.forEach(bp->{
-				System.out.println(bp.getName() + " " + bp.getExpansion()+ " " + bp.getId() + " " + mp.getIdBlueprint());
-			});
-			
+			System.out.println(mp.getName() + " " + mp.getExpansion());
 			
 			
 		});

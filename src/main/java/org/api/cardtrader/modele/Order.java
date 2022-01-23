@@ -16,6 +16,7 @@ public class Order implements Serializable {
 	private Integer id;
 	private String code;
 	@SerializedName(value="transaction_code") private String transactionCode;
+	@SerializedName(value="order_as") private String orderAs;
 	private User seller;
 	private User buyer;
 	private StateEnum state;
@@ -27,7 +28,6 @@ public class Order implements Serializable {
 	@SerializedName(value = "created_at") private Date dateCreation;
 	@SerializedName(value = "paid_at") private Date datePaid;
 	private User cancelRequester;
-	private Price sellerTotal;
 	private Date datePresaleEnd;
 	private Date dateUpdate;
 	@SerializedName(value = "fee_percentage") private double feePercentage;
@@ -40,7 +40,6 @@ public class Order implements Serializable {
 	private Price feeAmount;
 	private Price sellerFeeAmount;
 	private Price subTotal;
-	private Price sellerSubTotal;
 	@SerializedName(value = "order_items") private List<OrderItem> orderItems;
 	
 	
@@ -51,15 +50,15 @@ public class Order implements Serializable {
 
 		
 		
-		public Price getSellerSubTotal() {
-			return sellerSubTotal;
-		}
+		public String getOrderAs() {
+		return orderAs;
+	}
 
 
 
-		public void setSellerSubTotal(Price sellerSubTotal) {
-			this.sellerSubTotal = sellerSubTotal;
-		}
+	public void setOrderAs(String orderAs) {
+		this.orderAs = orderAs;
+	}
 
 
 
@@ -182,12 +181,7 @@ public class Order implements Serializable {
 	public void setCancelRequester(User cancelRequester) {
 		this.cancelRequester = cancelRequester;
 	}
-	public Price getSellerTotal() {
-		return sellerTotal;
-	}
-	public void setSellerTotal(Price sellerTotal) {
-		this.sellerTotal = sellerTotal;
-	}
+	
 	public Date getDatePresaleEnd() {
 		return datePresaleEnd;
 	}

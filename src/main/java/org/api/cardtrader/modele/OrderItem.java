@@ -17,7 +17,7 @@ public class OrderItem implements Serializable {
 		private boolean bundle;
 		private String description;
 		private boolean graded;
-		@SerializedName(value = "seller_price") private Price price;
+		@SerializedName(value = "seller_price",alternate = "buyer_price") private Price price;
 		private String tag;
 		private String lang;
 		private boolean foil;
@@ -35,11 +35,6 @@ public class OrderItem implements Serializable {
 		@SerializedName(value = "tcg_player_id") private int tcgPlayerId;
 		@SerializedName(value = "scryfall_id") private String scryfallId;
 		@SerializedName(value = "user_data_field") private String userDataField;
-		@SerializedName(value = "buyer_price") private Price buyerPrice; 
-		
-		
-		
-		
 		
 		
 		public ConditionEnum getCondition() {
@@ -99,16 +94,6 @@ public class OrderItem implements Serializable {
 
 		public void setSigned(boolean signed) {
 			this.signed = signed;
-		}
-
-
-		public Price getBuyerPrice() {
-			return buyerPrice;
-		}
-
-
-		public void setBuyerPrice(Price buyerPrice) {
-			this.buyerPrice = buyerPrice;
 		}
 
 		@Override

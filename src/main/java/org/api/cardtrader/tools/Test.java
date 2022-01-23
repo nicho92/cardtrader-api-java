@@ -26,9 +26,9 @@ public class Test {
 //		});
 //		
 		
-		service.listStock().forEach(mp->{
+		service.listOrders(1).forEach(mp->{
 			
-			System.out.println(mp.getName() + " " + mp.getExpansion());
+			System.out.println(mp);
 			
 			
 		});

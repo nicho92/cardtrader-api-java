@@ -550,8 +550,8 @@ public class CardTraderService {
 			  o.setDatePresaleEnd(json.toDate(je.get("presale_ended_at")));
 			  o.setDateCancel(json.toDate(je.get("cancelled_at")));
 			  o.setDatePaid(json.toDate(je.get("paid_at")));
-			  
-
+			  o.setDateSend(json.toDate(je.get("sent_at")));  
+			  o.setDateCancel(json.toDate(je.get("cancelled_at")));
 			  
 			  o.setTotal(new Price(je.get(o.getOrderAs()+"_total").getAsJsonObject().get("cents").getAsInt()/100.0, je.get(o.getOrderAs()+"_total").getAsJsonObject().get("currency").getAsString()));
 			  o.setSubTotal(new Price(je.get(o.getOrderAs()+"_subtotal").getAsJsonObject().get("cents").getAsInt()/100.0, je.get(o.getOrderAs()+"_subtotal").getAsJsonObject().get("currency").getAsString()));

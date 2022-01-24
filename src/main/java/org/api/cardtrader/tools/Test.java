@@ -28,7 +28,7 @@ public class Test {
 		
 		service.listOrders(1).forEach(mp->{
 			
-			System.out.println(mp);
+			System.out.println(mp.getDateCreation() + " "+  mp.getDatePaid() + " " + mp.getBuyer());
 			
 			
 		});

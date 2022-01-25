@@ -190,7 +190,6 @@ public class CardTraderService {
 
 	private MarketProduct parseMarket(JsonObject obj) {
 		var mk  = new MarketProduct();
-		
 		mk.setIdBlueprint(obj.get("blueprint_id").getAsInt());
 		mk.setId(obj.get("id").getAsInt());			
 
@@ -203,11 +202,12 @@ public class CardTraderService {
 		if(obj.get("game_id")!=null)
 			mk.setGame(getGameById(obj.get("game_id").getAsInt()));
 		
+		
 		if(obj.get("expansion")!=null && obj.get("expansion").isJsonObject())
 		{
 			mk.setExpansion(getExpansionByCode(obj.get("expansion").getAsJsonObject().get("code").getAsString()));
 		}
-		else
+		else // value is not filled in fab game.
 		{
 			mk.setExpansion(listMarketProductByBluePrint(mk.getIdBlueprint(),mk.getCategorie()).get(0).getExpansion());
 		}
@@ -237,6 +237,11 @@ public class CardTraderService {
 		
 		  if(obj.get("properties_hash").getAsJsonObject().get("mtg_foil")!=null)
 			  	mk.setFoil(obj.get("properties_hash").getAsJsonObject().get("mtg_foil").getAsBoolean());
+		 
+		  if(obj.get("properties_hash").getAsJsonObject().get("fab_foil")!=null)
+			  	mk.setFoil(obj.get("properties_hash").getAsJsonObject().get("fab_foil").getAsBoolean());
+	
+		  
 		  
 		  if(obj.get("properties_hash").getAsJsonObject().get("signed")!=null)
 			  	mk.setSigned(obj.get("properties_hash").getAsJsonObject().get("signed").getAsBoolean());
@@ -244,9 +249,14 @@ public class CardTraderService {
 		  if(obj.get("properties_hash").getAsJsonObject().get("altered")!=null)
 			  	mk.setAltered(obj.get("properties_hash").getAsJsonObject().get("altered").getAsBoolean());
 			  
+		  if(obj.get("properties_hash").getAsJsonObject().get("fab_language")!=null)
+			  	mk.setLanguage(obj.get("properties_hash").getAsJsonObject().get("fab_language").getAsString());
+		
 		  if(obj.get("properties_hash").getAsJsonObject().get("mtg_language")!=null)
 			  	mk.setLanguage(obj.get("properties_hash").getAsJsonObject().get("mtg_language").getAsString());
-		 
+
+		  
+		  
 		  if(obj.get("properties_hash").getAsJsonObject().get("condition")!=null)
 			  mk.setCondition(ConditionEnum.parseByLabel(obj.get("properties_hash").getAsJsonObject().get("condition").getAsString()));
 		  

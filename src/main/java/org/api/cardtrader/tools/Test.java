@@ -25,19 +25,12 @@ public class Test {
 //			System.out.println(bp + " " + bp.getCategorie() +" " + bp.getExpansion() +" " + bp.getPrice() +" " + bp.getSeller() + " " + bp.getSeller().getCountryCode());
 //		});
 //		
-//		service.listOrders(1).forEach(mp->{
-//			
-//			System.out.println(mp.getDateCreation() + " "+  mp.getDatePaid() + " " + mp.getBuyer());
-//			
-//			
-//		});
-		
-		
-		service.listStock().forEach(mp->{
-			System.out.println(mp.getName());
+		service.listOrders(1).forEach(mp->{
+			
+			System.out.println(mp.getDateCreation() + " "+  mp.getDatePaid() + " " + mp.getOrderItems());
+			
+			
 		});
-		
-		
 		
 	}
  

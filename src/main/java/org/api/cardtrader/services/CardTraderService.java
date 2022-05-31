@@ -46,6 +46,7 @@ public class CardTraderService {
 	private String token;
 	protected Logger logger = Logger.getLogger(this.getClass());
 	
+	private boolean forceExpansionLoadingIfNotFound=true;
 	private CacheManager<JsonElement> caches;
 	private App app;
 	
@@ -55,6 +56,11 @@ public class CardTraderService {
 		network.initToken(token);
 		this.token=token;
 		caches = new CacheManager<>();
+		forceExpansionLoadingIfNotFound = true;
+	}
+	
+	public void setForceExpansionLoadingIfNotFound(boolean forceExpansionLoadingIfNotFound) {
+		this.forceExpansionLoadingIfNotFound = forceExpansionLoadingIfNotFound;
 	}
 	
 	
@@ -207,7 +213,7 @@ public class CardTraderService {
 		{
 			mk.setExpansion(getExpansionByCode(obj.get("expansion").getAsJsonObject().get("code").getAsString()));
 		}
-		else // value is not filled in fab game.
+		else if(forceExpansionLoadingIfNotFound)// value is not filled in fab game.
 		{
 			mk.setExpansion(listMarketProductByBluePrint(mk.getIdBlueprint(),mk.getCategorie()).get(0).getExpansion());
 		}
@@ -232,7 +238,7 @@ public class CardTraderService {
 			mk.setBundle(obj.get("bundle").getAsBoolean());
 		
 	
-		  if(obj.get("graded")!=null)
+		  if(obj.get("graded")!=null || !obj.get("graded").isJsonNull())
 				mk.setGraded(obj.get("graded").getAsBoolean());
 		
 		  if(obj.get("properties_hash").getAsJsonObject().get("mtg_foil")!=null)

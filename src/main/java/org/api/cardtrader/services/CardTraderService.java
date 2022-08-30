@@ -220,46 +220,41 @@ public class CardTraderService {
 		
 		mk.setQty(obj.get("quantity").getAsInt());
 	
-		if(obj.get("price_cents")!=null)
-			mk.setPrice(new Price(Double.valueOf((obj.get("price_cents").getAsInt()/100.0)),obj.get("price_currency").getAsString()));
-		
-		if(obj.get("bundled_quantity")!=null)
+		if (obj.get("price_cents") != null)
+			mk.setPrice(new Price(Double.valueOf((obj.get("price_cents").getAsInt() / 100.0)),obj.get("price_currency").getAsString()));
+
+		if (obj.get("bundled_quantity") != null)
 			mk.setBundledQuantity(obj.get("bundled_quantity").getAsInt());
-		
-		if(obj.get("name_en")!=null)
+
+		if (obj.get("name_en") != null)
 			mk.setName(obj.get("name_en").getAsString());
-		
-		if(obj.get("name")!=null)
+
+		if (obj.get("name") != null)
 			mk.setName(obj.get("name").getAsString());
-		
-		
-		
-		if(obj.get("bundle")!=null)
+
+		if (obj.get("bundle") != null)
 			mk.setBundle(obj.get("bundle").getAsBoolean());
-		
-	
-		  if(obj.get("graded")!=null || !obj.get("graded").isJsonNull())
-				mk.setGraded(obj.get("graded").getAsBoolean());
-		
-		  if(obj.get("properties_hash").getAsJsonObject().get("mtg_foil")!=null)
-			  	mk.setFoil(obj.get("properties_hash").getAsJsonObject().get("mtg_foil").getAsBoolean());
-		 
-		  if(obj.get("properties_hash").getAsJsonObject().get("fab_foil")!=null)
-			  	mk.setFoil(obj.get("properties_hash").getAsJsonObject().get("fab_foil").getAsBoolean());
-	
-		  
-		  
-		  if(obj.get("properties_hash").getAsJsonObject().get("signed")!=null)
-			  	mk.setSigned(obj.get("properties_hash").getAsJsonObject().get("signed").getAsBoolean());
-		  
-		  if(obj.get("properties_hash").getAsJsonObject().get("altered")!=null)
-			  	mk.setAltered(obj.get("properties_hash").getAsJsonObject().get("altered").getAsBoolean());
-			  
-		  if(obj.get("properties_hash").getAsJsonObject().get("fab_language")!=null)
-			  	mk.setLanguage(obj.get("properties_hash").getAsJsonObject().get("fab_language").getAsString());
-		
-		  if(obj.get("properties_hash").getAsJsonObject().get("mtg_language")!=null)
-			  	mk.setLanguage(obj.get("properties_hash").getAsJsonObject().get("mtg_language").getAsString());
+
+		if (obj.get("graded") != null && !obj.get("graded").isJsonNull())
+			mk.setGraded(obj.get("graded").getAsBoolean());
+
+		if (obj.get("properties_hash").getAsJsonObject().get("mtg_foil") != null)
+			mk.setFoil(obj.get("properties_hash").getAsJsonObject().get("mtg_foil").getAsBoolean());
+
+		if (obj.get("properties_hash").getAsJsonObject().get("fab_foil") != null)
+			mk.setFoil(obj.get("properties_hash").getAsJsonObject().get("fab_foil").getAsBoolean());
+
+		if (obj.get("properties_hash").getAsJsonObject().get("signed") != null)
+			mk.setSigned(obj.get("properties_hash").getAsJsonObject().get("signed").getAsBoolean());
+
+		if (obj.get("properties_hash").getAsJsonObject().get("altered") != null)
+			mk.setAltered(obj.get("properties_hash").getAsJsonObject().get("altered").getAsBoolean());
+
+		if (obj.get("properties_hash").getAsJsonObject().get("fab_language") != null)
+			mk.setLanguage(obj.get("properties_hash").getAsJsonObject().get("fab_language").getAsString());
+
+		if (obj.get("properties_hash").getAsJsonObject().get("mtg_language") != null)
+			mk.setLanguage(obj.get("properties_hash").getAsJsonObject().get("mtg_language").getAsString());
 
 		  
 		  

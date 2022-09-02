@@ -7,7 +7,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -16,7 +17,7 @@ import com.google.gson.JsonElement;
 
 public class JsonTools {
 
-	protected Logger logger = Logger.getLogger(this.getClass());
+	protected Logger logger = LogManager.getLogger(this.getClass());
 
 	private Gson gson;
 	

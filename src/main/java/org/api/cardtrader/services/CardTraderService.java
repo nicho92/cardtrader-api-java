@@ -8,7 +8,8 @@ import java.util.concurrent.Callable;
 
 import javax.annotation.Nonnull;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.api.cardtrader.enums.ConditionEnum;
 import org.api.cardtrader.enums.Identifier;
 import org.api.cardtrader.enums.StateEnum;
@@ -44,7 +45,7 @@ public class CardTraderService {
 	private JsonTools json;
 	private URLUtilities network; 
 	private String token;
-	protected Logger logger = Logger.getLogger(this.getClass());
+	protected Logger logger = LogManager.getLogger(this.getClass());
 	
 	private boolean forceExpansionLoadingIfNotFound=true;
 	private CacheManager<JsonElement> caches;

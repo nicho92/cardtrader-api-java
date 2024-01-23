@@ -527,7 +527,7 @@ public class CardTraderService {
 				return network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/"+ORDERS+"?format=json&limit=100&page="+pageMin).getAsJsonArray();
 			}
 		}).getAsJsonArray();
-		
+	
 		arr.forEach(je->ret.add(parseOrder(je.getAsJsonObject())));
 		
 		return ret;
@@ -557,8 +557,7 @@ public class CardTraderService {
 			  o.setSize(je.get("size").getAsInt());
 			  o.setPackagingNumber(je.get("packing_number").getAsInt());
 			  o.setPresale(!je.get("presale").isJsonNull() && je.get("presale").getAsBoolean());
-			  o.setDateCreation(json.toDate(je.get("created_at")));
-			  o.setDateUpdate(json.toDate(je.get("updated_at")));
+			  o.setDateCreation(json.toDate(je.get("paid_at")));
 			  o.setDatePresaleEnd(json.toDate(je.get("presale_ended_at")));
 			  o.setDateCancel(json.toDate(je.get("cancelled_at")));
 			  o.setDatePaid(json.toDate(je.get("paid_at")));

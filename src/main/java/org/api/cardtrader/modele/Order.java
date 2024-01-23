@@ -29,7 +29,6 @@ public class Order implements Serializable {
 	@SerializedName(value = "paid_at") private Date datePaid;
 	private User cancelRequester;
 	private Date datePresaleEnd;
-	private Date dateUpdate;
 	@SerializedName(value = "fee_percentage") private double feePercentage;
 	private String feeReason="seller";
 	private int packagingNumber;
@@ -237,30 +236,10 @@ public class Order implements Serializable {
 	public void setOrderItems(List<OrderItem> orderItems) {
 		this.orderItems = orderItems;
 	}
-
-
 	public Price getTotal() {
 		return total;
 	}
-
-
 	public void setTotal(Price total) {
 		this.total = total;
 	}
-
-
-
-	public Date getDateUpdate() {
-		return dateUpdate;
-	}
-
-
-
-	public void setDateUpdate(Date dateUpdate) {
-		this.dateUpdate = dateUpdate;
-	}
-	
-	
-	
-	
 }

@@ -9,7 +9,7 @@ java api for cardtrader.com
 <dependency>
     <groupId>com.github.nicho92</groupId>
     <artifactId>cardtrader-api-java</artifactId>
-    <version>0.0.17</version>
+    <version>0.0.38</version>
 </dependency>
 ```
 

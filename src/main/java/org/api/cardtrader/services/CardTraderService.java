@@ -24,6 +24,7 @@ import org.api.cardtrader.modele.MarketProduct;
 import org.api.cardtrader.modele.Order;
 import org.api.cardtrader.modele.OrderItem;
 import org.api.cardtrader.modele.Price;
+import org.api.cardtrader.modele.ShippingMethod;
 import org.api.cardtrader.modele.User;
 import org.api.cardtrader.tools.CacheManager;
 import org.api.cardtrader.tools.JsonTools;
@@ -584,6 +585,25 @@ public class CardTraderService {
 			  	
 			  o.setShippingAddress(parseAddress( je.get("order_shipping_address").getAsJsonObject()));
 			  o.setBillingAddress(parseAddress( je.get("order_billing_address").getAsJsonObject()));
+			  
+			  
+			  if(je.get("order_shipping_method")!=null)
+			  {
+				  var joShip = je.get("order_shipping_method").getAsJsonObject();
+				  
+				  ShippingMethod m = new ShippingMethod();
+				  					       m.setId(joShip.get("id").getAsInt());
+				  					       m.setName(joShip.get("name").getAsString());
+				  					       m.setTracked(joShip.get("tracked").getAsBoolean());
+				  					       m.setTrackedCode(joShip.get("tracking_code").isJsonNull()?"":joShip.get("tracking_code").getAsString());
+				  					       m.setEstimatedShippingDay(joShip.get("max_estimate_shipping_days").getAsInt());
+				  					       
+				  					       var jop = joShip.get(o.getOrderAs()+"_price").getAsJsonObject();
+				  					       m.setSellerPrice(new Price(jop.get("cents").getAsInt()/100.0, jop.get("currency").getAsString()));
+				  					       
+				  o.setShippingMethod(m);
+			  }
+			  
 			  
 			  List<OrderItem> list = json.fromJsonList(je.get("order_items"), OrderItem.class);
 			  for(var item : list)

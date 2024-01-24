@@ -15,7 +15,7 @@ public class Test {
 		var service = new CardTraderService(token);
 
 		service.listOrders(1).forEach(o->{
-			System.out.println(service.getOrderDetails(o.getId()).getDateCreation());
+			System.out.println(o.getShippingMethod());
 		});
 		
 	}

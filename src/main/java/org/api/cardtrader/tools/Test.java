@@ -14,8 +14,8 @@ public class Test {
 		
 		var service = new CardTraderService(token);
 
-		service.listOrders(1).forEach(o->{
-			System.out.println(o.getShippingMethod());
+		service.listStock().forEach(o->{
+			System.out.println(o);
 		});
 		
 	}

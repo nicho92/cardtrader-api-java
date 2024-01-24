@@ -213,7 +213,7 @@ public class CardTraderService {
 		
 		if(obj.get("expansion")!=null && obj.get("expansion").isJsonObject())
 		{
-			mk.setExpansion(getExpansionByCode(obj.get("expansion").getAsJsonObject().get("code").getAsString()));
+			mk.setExpansion(getExpansionById(obj.get("expansion").getAsJsonObject().get("id").getAsInt()));
 		}
 		else if(forceExpansionLoadingIfNotFound)// value is not filled in fab game.
 		{

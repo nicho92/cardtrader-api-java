@@ -147,6 +147,11 @@ public class CardTraderService {
 		return listExpansions().stream().filter(c->c.getId()==id).findFirst().orElse(null);
 	}
 	
+	public Expansion getExpansionByName(String name) {
+		return listExpansions().stream().filter(c->c.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
+	}
+	
+	
 	public Expansion getExpansionByCode(String code) {
 		return listExpansions().stream().filter(c->c.getCode().equalsIgnoreCase(code)).findFirst().orElse(null);
 	}
@@ -614,6 +619,7 @@ public class CardTraderService {
 				item.setSigned(item.getProperties().getOrDefault("signed","false").equals("true"));
 				item.setAltered(item.getProperties().getOrDefault("altered","false").equals("true"));
 				item.setLang(item.getProperties().getOrDefault("mtg_language",""));
+				item.setExpansionProduct(getExpansionByName(item.getExpansion()));
 				
 				item.setCondition(ConditionEnum.parseByLabel((item.getProperties().getOrDefault("condition","Near Mint"))));
 			  }

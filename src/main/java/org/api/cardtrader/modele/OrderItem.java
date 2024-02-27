@@ -13,6 +13,7 @@ public class OrderItem implements Serializable {
 		private int id;
 		private String name;
 		private String expansion;
+		private Expansion expansionProduct;
 		private int quantity;
 		private boolean bundle;
 		private String description;
@@ -35,6 +36,14 @@ public class OrderItem implements Serializable {
 		@SerializedName(value = "tcg_player_id") private int tcgPlayerId;
 		@SerializedName(value = "scryfall_id") private String scryfallId;
 		@SerializedName(value = "user_data_field") private String userDataField;
+		
+		public Expansion getExpansionProduct() {
+			return expansionProduct;
+		}
+		
+		public void setExpansionProduct(Expansion expansionProduct) {
+			this.expansionProduct = expansionProduct;
+		}
 		
 		
 		public ConditionEnum getCondition() {

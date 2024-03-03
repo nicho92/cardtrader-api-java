@@ -164,7 +164,7 @@ public class URLUtilities {
 	
 	public HttpResponse doGet(String url,Map<String,String> headers) throws IOException
 	{
-		logger.info("Parsing url " + url);
+		logger.debug("Reading {}",url);
 		var getReq = new HttpGet(url);
 		
 		
@@ -184,7 +184,7 @@ public class URLUtilities {
 	public JsonElement extractJson(String url) throws IOException {
 		var reader = new JsonReader(new InputStreamReader(doGet(url).getEntity().getContent()));
 		JsonElement e= JsonParser.parseReader(reader);
-		logger.trace("return :" + e);
+		logger.debug("return {}",e);
 		reader.close();
 		return e;
 		

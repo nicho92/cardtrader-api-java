@@ -13,9 +13,9 @@ public class Test {
 		var token = FileUtils.readFileToString(new File("c:/key.txt"), Charset.defaultCharset());
 		
 		var service = new CardTraderService(token);
-
-		service.listStock().forEach(o->{
-			System.out.println(o);
+		
+		service.listBluePrintsByExpansion(3181).forEach(o->{
+			System.out.println(o.getCollectorNumber() + " " + o.getName() +" " + o.getCategorie());
 		});
 		
 	}

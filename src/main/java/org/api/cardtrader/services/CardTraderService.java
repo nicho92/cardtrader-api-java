@@ -2,12 +2,16 @@ package org.api.cardtrader.services;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
 import javax.annotation.Nonnull;
 
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.api.cardtrader.enums.ConditionEnum;
@@ -30,6 +34,7 @@ import org.api.cardtrader.tools.CacheManager;
 import org.api.cardtrader.tools.JsonTools;
 import org.api.cardtrader.tools.URLUtilities;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -95,6 +100,19 @@ public class CardTraderService {
 		
 		return app;
 	}
+	
+	public List<Expansion> listExpansions(int idGame)
+	{
+		List<Expansion> ret = json.fromJsonList(caches.getCached(EXPANSIONS+idGame, new Callable<JsonElement>() {
+			@Override
+			public JsonElement call() throws Exception {
+				return network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/"+EXPANSIONS+"?game_id="+idGame+"?format=json").getAsJsonArray();
+			}
+		}),Expansion.class);
+		ret.forEach(ex->ex.setGame(getGameById(idGame)));
+		return ret;
+	}
+	
 	
 	public List<Expansion> listExpansions()
 	{
@@ -199,7 +217,12 @@ public class CardTraderService {
 		return ret;
 	}
 	
-	
+
+	public List<MarketProduct> listMarketProductByBluePrint(BluePrint bp)
+	{
+		return listMarketProductByBluePrint(bp.getId(),bp.getCategorie());
+	}
+
 
 	private MarketProduct parseMarket(JsonObject obj) {
 		var mk  = new MarketProduct();
@@ -287,11 +310,6 @@ public class CardTraderService {
 	}
 	
 	
-	public List<MarketProduct> listMarketProductByBluePrint(BluePrint bp)
-	{
-		return listMarketProductByBluePrint(bp.getId(),bp.getCategorie());
-	}
-
 	
 	private List<MarketProduct> listMarketProductByBluePrint(Integer idBlueprint, Categorie ct) {
 		var ret = new ArrayList<MarketProduct>();
@@ -338,101 +356,63 @@ public class CardTraderService {
 		return ret;
 	}
 	
-
-	public List<BluePrint> listBluePrints(String name) {
-		return listBluePrints(null, name, null);
+	public List<BluePrint> listBluePrints(@Nonnull String name, Expansion set)
+	{
+		if(set==null)
+			return listBluePrintsByName(name, null);
 		
+		return  listBluePrintsByName(name, set.getId());
 	}
 	
 	
-	public List<BluePrint> listBluePrints(Categorie category, String name, Expansion expansion)
+	public List<BluePrint> listBluePrintsByName(@Nonnull String name, Integer idSet)
 	{
-		return listBluePrintsByIds(category==null?null:category.getId(),name, expansion==null?null:expansion.getId());
-	}
-	
-	public List<BluePrint> listBluePrintsByIds(Integer categoryId, String name, Integer expansionid)
-	{
-		
 		var arr= caches.getCached(BLUEPRINTS+name, new Callable<JsonElement>() {
+			@Override
+			public JsonElement call() throws Exception {
+				return network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/"+BLUEPRINTS+"/?name="+URLEncoder.encode(name,"UTF-8") + (idSet!=null?"expansion_id="+idSet:"")).getAsJsonArray();
+			}
+		});
+		
+		var ret = new ArrayList<BluePrint>();
+		arr.getAsJsonArray().forEach(je->{
+			listBluePrintsByExpansion(je.getAsJsonObject().get("expansion_id").getAsInt()).forEach(bp->{
+				if(bp.getName().equals(name))
+					ret.add(bp);
+			});
+		});
+		return ret;
+		
+		
+	}
+	
+	public List<BluePrint> listBluePrintsByExpansion(Expansion expansion)
+	{
+		return listBluePrintsByExpansion(expansion.getId());
+	}
+	
+	public List<BluePrint> listBluePrintsByExpansion(Integer expansionid)
+	{
+		
+		var arr= caches.getCached(BLUEPRINTS+expansionid, new Callable<JsonElement>() {
 			@Override
 			public JsonElement call() throws Exception {
 				
 				String extra=null;
 				
-				if(categoryId!=null)
-				{
-					extra="category_id="+categoryId;
-				}
-				
-				if(name!=null)
-				{
-					if(extra==null)
-							extra="name="+name.replace(" ", "%20");
-						else 
-							extra+="&name="+name.replace(" ", "%20");
-				}
-				
 				if(expansionid!=null)
 				{
-					if(extra==null)
-						extra="expansion_id="+expansionid;
-					else 
-						extra+="&expansion_id="+expansionid;
+					extra+="&expansion_id="+expansionid;
 				}
 				
-				return network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/"+BLUEPRINTS+""+(extra!=null?"?"+extra:""));
+				return network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/"+BLUEPRINTS+"/export"+(extra!=null?"?"+extra:""));
 			}
 		}).getAsJsonArray();
-	
-		List<BluePrint> ret = new ArrayList<>();
-		arr.forEach(a->{
-			  var obj = a.getAsJsonObject();
-			  
-			 
-			  var b = new BluePrint();
-	     	  b.setId(obj.get("id").getAsInt());
-	     	  b.setName(obj.get("name").getAsString());
-	     	  
-	     	  try {
-		     	  if(!obj.get("version").isJsonNull() && !obj.get("version").getAsString().isBlank())
-		     		  b.setVersion(VersionEnum.valueOf(obj.get("version").getAsString().toUpperCase().replace("-", "_").replace(" ", "_")));
-	     	  }
-	     	  catch(IllegalArgumentException ex)
-	     	  {
-	     		  logger.warn(ex.getMessage());
-	     	  }
-	     	  
-	     	  b.setSlug(obj.get("slug").getAsString());
-	     	  
-	     	  if(obj.get("mkm_id")!=null)
-	     		  b.setMkmId(obj.get("mkm_id").getAsInt());
-	     	  
-	     	  if(obj.get("scryfall_id")!=null)
-	     		  b.setScryfallId(obj.get("scryfall_id").getAsString());
-	     	  
-	     	  
-	 		  b.setGame(getGameById(obj.get("game_id").getAsInt()));
-			  b.setCategorie(getCategoryById(obj.get("category_id").getAsInt()));
-			  b.setExpansion(getExpansionById(obj.get("expansion_id").getAsInt()));
-			  b.setProductUrl(CardTraderConstants.CARDTRADER_WEBSITE_URI+"cards/"+b.getSlug()+"?share_code="+CardTraderConstants.SHARE_CODE);
-			  
-			  if(obj.get("fixed_properties")!=null && obj.get("fixed_properties").getAsJsonObject().get("collector_number")!=null)
-				  b.setCollectorNumber(obj.get("fixed_properties").getAsJsonObject().get("collector_number").getAsString());
-			  
-			  if(obj.get("image")!=null)
-			  {
-				  b.setImageUrl(CardTraderConstants.CARDTRADER_WEBSITE_URI+obj.get("image").getAsJsonObject().get("url").getAsString());
-			  }
-			  else
-			  {
-				  b.setImageUrl("https://api.scryfall.com/cards/"+b.getScryfallId()+"?format=image");
-			  }
-			  ret.add(b);
-		});
 		
 		
-		return ret;
+		return parseBluePrint(arr);
 	}
+	
 	
 	public void downloadProducts(@Nonnull Integer gameId, @Nonnull Integer categoryId,File f) throws IOException
 	{
@@ -552,6 +532,65 @@ public class CardTraderService {
 		}).getAsJsonObject());
 	}
 
+	private List<BluePrint> parseBluePrint(JsonArray arr) {
+		List<BluePrint> ret = new ArrayList<>();
+		arr.forEach(a->{
+			  var obj = a.getAsJsonObject();
+			  
+			 
+			  var b = new BluePrint();
+	     	  b.setId(obj.get("id").getAsInt());
+	     	  b.setName(obj.get("name").getAsString());
+	     	  
+	     	  try {
+		     	  if(!obj.get("version").isJsonNull() && !obj.get("version").getAsString().isBlank())
+		     		  b.setVersion(VersionEnum.valueOf(obj.get("version").getAsString().toUpperCase().replace("-", "_").replace(" ", "_")));
+	     	  }
+	     	  catch(IllegalArgumentException ex)
+	     	  {
+	     		  logger.trace(ex.getMessage());
+	     	  }
+	     	  
+	     	 if(obj.get("slug")!=null && !obj.get("slug").isJsonNull())
+	     		 b.setSlug(obj.get("slug").getAsString());
+	     	  
+	     	  if(obj.get("mkm_id")!=null && !obj.get("mkm_id").isJsonNull())
+	     		  b.setMkmId(obj.get("mkm_id").getAsInt());
+	     	  
+	    	  if(obj.get("scryfall_id")!=null && !obj.get("scryfall_id").isJsonNull())
+	     		  b.setScryfallId(obj.get("scryfall_id").getAsString());
+	     	  
+	     	  
+	 		  b.setGame(getGameById(obj.get("game_id").getAsInt()));
+			  b.setCategorie(getCategoryById(obj.get("category_id").getAsInt()));
+			  b.setExpansion(getExpansionById(obj.get("expansion_id").getAsInt()));
+			  b.setProductUrl(CardTraderConstants.CARDTRADER_WEBSITE_URI+"cards/"+b.getSlug()+"?share_code="+CardTraderConstants.SHARE_CODE);
+			  
+			  if(obj.get("fixed_properties")!=null && obj.get("fixed_properties").getAsJsonObject().get("collector_number")!=null)
+			  {
+				  try {
+					  b.setCollectorNumber(obj.get("fixed_properties").getAsJsonObject().get("collector_number").getAsString());
+				  }
+				  catch(Exception e)
+				  {
+					  //do nothing
+				  }
+			  
+			  }
+			  
+			  if(obj.get("image")!=null && !obj.get("image").isJsonNull())
+			  {
+				  b.setImageUrl(CardTraderConstants.CARDTRADER_WEBSITE_URI+obj.get("image").getAsJsonObject().get("url").getAsString());
+			  }
+			  else
+			  {
+				  b.setImageUrl("https://api.scryfall.com/cards/"+b.getScryfallId()+"?format=image");
+			  }
+			  ret.add(b);
+		});
+		return ret;
+	}
+
 	
 	private Order parseOrder(JsonObject je) {
 		var o  = new Order();
@@ -650,7 +689,6 @@ public class CardTraderService {
 		
 		return add;
 	}
-
 
 	public void setListener(URLCallListener urlCallListener) {
 		network.setCallListener(urlCallListener);

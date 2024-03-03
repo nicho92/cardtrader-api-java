@@ -356,6 +356,21 @@ public class CardTraderService {
 		return ret;
 	}
 	
+	public BluePrint getBluePrintById(Integer id)
+	{
+		var ret = caches.getCached(BLUEPRINTS+id, new Callable<JsonElement>() {
+			@Override
+			public JsonElement call() throws Exception {
+				return network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/"+BLUEPRINTS+"/"+id);
+			}
+		}).getAsJsonObject();
+		
+		return parseBluePrint(ret);
+		
+	}
+	
+	
+	
 	public List<BluePrint> listBluePrints(@Nonnull String name, Expansion set)
 	{
 		if(set==null)
@@ -410,7 +425,13 @@ public class CardTraderService {
 		}).getAsJsonArray();
 		
 		
-		return parseBluePrint(arr);
+		var ret = new ArrayList<BluePrint>();
+		
+		arr.forEach(je->{
+			ret.add(parseBluePrint(je.getAsJsonObject()));
+		});
+		
+		return ret;
 	}
 	
 	
@@ -532,9 +553,7 @@ public class CardTraderService {
 		}).getAsJsonObject());
 	}
 
-	private List<BluePrint> parseBluePrint(JsonArray arr) {
-		List<BluePrint> ret = new ArrayList<>();
-		arr.forEach(a->{
+	private BluePrint parseBluePrint(JsonObject a) {
 			  var obj = a.getAsJsonObject();
 			  
 			 
@@ -586,9 +605,8 @@ public class CardTraderService {
 			  {
 				  b.setImageUrl("https://api.scryfall.com/cards/"+b.getScryfallId()+"?format=image");
 			  }
-			  ret.add(b);
-		});
-		return ret;
+			
+			  return b;
 	}
 
 	

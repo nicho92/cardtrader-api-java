@@ -370,7 +370,7 @@ public class CardTraderService {
 		var arr= caches.getCached(BLUEPRINTS+name, new Callable<JsonElement>() {
 			@Override
 			public JsonElement call() throws Exception {
-				return network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/"+BLUEPRINTS+"/?name="+URLEncoder.encode(name,"UTF-8") + (idSet!=null?"expansion_id="+idSet:"")).getAsJsonArray();
+				return network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/"+BLUEPRINTS+"/?name="+URLEncoder.encode(name,"UTF-8") + (idSet!=null?"&expansion_id="+idSet:"")).getAsJsonArray();
 			}
 		});
 		

@@ -13,6 +13,6 @@ public class CardTraderConstants {
 	public static final String CARDTRADER_WEBSITE_URI="https://www.cardtrader.com/";
 	public static final String USER_AGENT_VALUE = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36";
 	public static final Charset DEFAULT_ENCODING = StandardCharsets.UTF_8;
-	public static final String CARDTRADER_JAVA_API_VERSION = "0.0.45";
+	public static final String CARDTRADER_JAVA_API_VERSION = "0.0.47";
 	public static final String CARDTRADER_NAME = "CardTrader";
 }

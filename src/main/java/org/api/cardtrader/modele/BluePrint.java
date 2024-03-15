@@ -24,6 +24,12 @@ public class BluePrint implements Serializable {
 	public String getImageUrl() {
 		return imageUrl;
 	}
+	
+	
+	public boolean isCard()
+	{
+		return getCategorie().getId()==1;
+	}
 
 
 	public BluePrint() {

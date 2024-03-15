@@ -104,7 +104,7 @@ public class URLUtilities {
 		var postReq = new HttpPost(url);
 		postReq.addHeader("Authorization",bearer);
 		postReq.setEntity(new StringEntity(el.toString(),ContentType.APPLICATION_JSON));
-		logger.debug("posting " + el.toString());
+		logger.debug("posting {}",el.toString());
 		HttpResponse resp = execute(postReq);
 		
 		String ret = extractAndClose(resp);

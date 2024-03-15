@@ -2,8 +2,6 @@ package org.api.cardtrader.services;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +9,6 @@ import java.util.concurrent.Callable;
 
 import javax.annotation.Nonnull;
 
-import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.api.cardtrader.enums.ConditionEnum;
@@ -34,7 +31,6 @@ import org.api.cardtrader.tools.CacheManager;
 import org.api.cardtrader.tools.JsonTools;
 import org.api.cardtrader.tools.URLUtilities;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -413,14 +409,14 @@ public class CardTraderService {
 			@Override
 			public JsonElement call() throws Exception {
 				
-				String extra=null;
+				String extra="";
 				
 				if(expansionid!=null)
 				{
-					extra+="&expansion_id="+expansionid;
+					extra="?expansion_id="+expansionid;
 				}
 				
-				return network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/"+BLUEPRINTS+"/export"+(extra!=null?"?"+extra:""));
+				return network.extractJson(CardTraderConstants.CARDTRADER_API_URI+"/"+BLUEPRINTS+"/export"+(!extra.isEmpty()?extra:""));
 			}
 		}).getAsJsonArray();
 		

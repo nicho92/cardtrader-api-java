@@ -14,9 +14,16 @@ public class Test {
 		
 		var service = new CardTraderService(token);
 		
-		service.listBluePrintsByExpansion(3181).forEach(o->{
-			System.out.println(o.getCategorie() + " " + o.getName() +" " + o.getSlug() + " " + o.getCollectorNumber());
+		var bpCard = service.listBluePrintsByName("Sol Ring",3181).get(0);
+		
+		
+		service.listMarketProductByBluePrint(bpCard).forEach(mp->{
+			
+			System.out.println(bpCard.getName() + " " + mp.getQty() + " " + mp.getLanguage() + " " + mp.getPrice() + " " + mp.getSeller());
+			
 		});
+		
+		
 	}
  
 }

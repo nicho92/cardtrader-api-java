@@ -7,22 +7,16 @@ import com.google.gson.annotations.SerializedName;
 public class Address implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private Integer id;
+
 	private String name;
 	private String street;
 	private String zip;
 	private String city;
 	@SerializedName(value = "state_or_province")private  String stateOrProvince;
 	private String countryCode;
-	private String vatNumber;
 	private String country;
 	
-	public Integer getId() {
-		return id;
-	}
-	public void setId(Integer id) {
-		this.id = id;
-	}
+	
 	public String getName() {
 		return name;
 	}
@@ -58,12 +52,6 @@ public class Address implements Serializable {
 	}
 	public void setCountryCode(String countryCode) {
 		this.countryCode = countryCode;
-	}
-	public String getVatNumber() {
-		return vatNumber;
-	}
-	public void setVatNumber(String vatNumber) {
-		this.vatNumber = vatNumber;
 	}
 	public String getCountry() {
 		return country;

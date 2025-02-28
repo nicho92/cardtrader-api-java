@@ -689,14 +689,12 @@ public class CardTraderService {
 	private Address parseAddress(JsonObject obj) {
 		
 		var add = new Address();
-			  add.setId(obj.get("id").getAsInt());
 			  add.setName(obj.get("name").getAsString());
 			  add.setStreet(obj.get("street").getAsString());
 			  add.setZip(obj.get("zip").getAsString());
 			  add.setCity(obj.get("city").getAsString());
 			  add.setStateOrProvince(obj.get("state_or_province").getAsString());
 			  add.setCountryCode(obj.get("country_code").getAsString());
-			  add.setVatNumber(obj.get("vat_number").isJsonNull()?"": obj.get("vat_number").getAsString());
 			  add.setCountry(obj.get("country").getAsString());
 			  
 			  

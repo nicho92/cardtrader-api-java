@@ -14,12 +14,11 @@ public class Test {
 		
 		var service = new CardTraderService(token);
 		
-		var bpCard = service.listBluePrintsByName("Sol Ring",3181).get(0);
 		
 		
-		service.listMarketProductByBluePrint(bpCard).forEach(mp->{
+		service.listOrders(1).forEach(mp->{
 			
-			System.out.println(bpCard.getName() + " " + mp.getQty() + " " + mp.getLanguage() + " " + mp.getPrice() + " " + mp.getSeller());
+			System.out.println(mp);
 			
 		});
 		

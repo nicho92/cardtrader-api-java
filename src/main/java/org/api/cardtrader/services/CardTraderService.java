@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import javax.annotation.Nonnull;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.api.cardtrader.enums.ConditionEnum;
@@ -30,6 +28,7 @@ import org.api.cardtrader.modele.User;
 import org.api.cardtrader.tools.CacheManager;
 import org.api.cardtrader.tools.JsonTools;
 import org.api.cardtrader.tools.URLUtilities;
+import org.jspecify.annotations.NonNull;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -367,7 +366,7 @@ public class CardTraderService {
 	
 	
 	
-	public List<BluePrint> listBluePrints(@Nonnull String name, Expansion set)
+	public List<BluePrint> listBluePrints(@NonNull String name, Expansion set)
 	{
 		if(set==null)
 			return listBluePrintsByName(name, null);
@@ -376,7 +375,7 @@ public class CardTraderService {
 	}
 	
 	
-	public List<BluePrint> listBluePrintsByName(@Nonnull String name, Integer idSet)
+	public List<BluePrint> listBluePrintsByName(@NonNull String name, Integer idSet)
 	{
 		var arr= caches.getCached(BLUEPRINTS+name, new Callable<JsonElement>() {
 			@Override
@@ -431,14 +430,14 @@ public class CardTraderService {
 	}
 	
 	
-	public void downloadProducts(@Nonnull Integer gameId, @Nonnull Integer categoryId,File f) throws IOException
+	public void downloadProducts(@NonNull Integer gameId, @NonNull Integer categoryId,File f) throws IOException
 	{
 		String url=CardTraderConstants.CARDTRADER_API_URI+"/products/export";
 	
 		network.download(url+"?game_id="+gameId+"&category_id="+categoryId, f);
 	}
 	
-	public Integer addProduct(@Nonnull String identifier, @Nonnull Identifier idRef, @Nonnull double price, @Nonnull int qty, String description,ConditionEnum condition,String userDataField) throws IOException
+	public Integer addProduct(@NonNull String identifier, @NonNull Identifier idRef, @NonNull double price, @NonNull int qty, String description,ConditionEnum condition,String userDataField) throws IOException
 	{
 		
 		var obj = new JsonObject();
@@ -480,7 +479,7 @@ public class CardTraderService {
 	}
 	
 	
-	public void updateProduct(@Nonnull Integer identifier, Double price, Integer qty, String description,ConditionEnum condition,String userDataField) throws IOException
+	public void updateProduct(@NonNull Integer identifier, Double price, Integer qty, String description,ConditionEnum condition,String userDataField) throws IOException
 	{
 		
 		var obj = new JsonObject();
@@ -509,7 +508,7 @@ public class CardTraderService {
 		network.doPut(CardTraderConstants.CARDTRADER_API_URI+"/products/"+identifier,obj);
 	}
 	
-	public void deleteProduct(@Nonnull Integer identifier) throws IOException
+	public void deleteProduct(@NonNull Integer identifier) throws IOException
 	{
 		network.doDelete(CardTraderConstants.CARDTRADER_API_URI+"/products/"+identifier);
 	}

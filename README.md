@@ -1,10 +1,14 @@
 # cardtrader-api-java
 
+[![Maven Central](https://img.shields.io/maven-central/v/com.github.nicho92/cardtrader-api-java.svg)](https://central.sonatype.com/artifact/com.github.nicho92/cardtrader-api-java)
+[![Java](https://img.shields.io/badge/Java-21%2B-blue.svg)](https://www.oracle.com/java/)
+[![License](https://img.shields.io/badge/License-Apache%202.0-green.svg)](http://www.apache.org/licenses/LICENSE-2.0)
+
 `cardtrader-api-java` is a Java client for the [CardTrader](https://www.cardtrader.com/) API. It provides a small service layer around CardTrader API v2 for reading catalogue data, searching marketplace products, managing inventory products, adding marketplace products to a cart, and retrieving order details.
 
 ## Requirements
 
-- Java 13 or newer
+- Java 21 or newer
 - Maven 3.x
 - A CardTrader API token
 
@@ -16,7 +20,7 @@ Add the library to your Maven project:
 <dependency>
     <groupId>com.github.nicho92</groupId>
     <artifactId>cardtrader-api-java</artifactId>
-    <version>0.0.51</version>
+    <version>0.0.52</version>
 </dependency>
 ```
 

@@ -6,14 +6,10 @@ import com.google.gson.annotations.SerializedName;
 
 public class Price implements Serializable {
 
+	
+	private static final long serialVersionUID = 1L;
 	@SerializedName(value = "value", alternate = {"cents"})  private Double value;
 	private String currency;
-	
-	
-	public Price()
-	{
-		
-	}
 	
 	
 	@Override
